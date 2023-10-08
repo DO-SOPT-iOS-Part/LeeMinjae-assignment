@@ -30,10 +30,10 @@
 ## 🍏 이론 정리 과제 기능별 내용 정리 모아보기
 | 순번 | 어떤 내용을 공부했는지요❓ | 몇주차❓ | 링크를 알려주시와요🔥 |
 | :--: | -- | :--: | :--: |
-| 1️⃣ | Swift의 접근제어자 (Access Control) | `1주차` | 
-| 2️⃣ | ViewController의 생명주기 | `1주차` | 
-| 3️⃣ | weak self란 무엇일까? 메모리 참조 방법(strong, weak, unowned) | `1주차` | 
-| 4️⃣ | xib, nib란? | `1주차` | 
-| 5️⃣ | 클래스와 객체의 개념 정리하기 (상속, 추상화) | `1주차` | 
+| 1️⃣ | Swift의 접근제어자 (Access Control) | `1주차` | [블로그 링크✌🏻](https://mini-min-dev.tistory.com/73) |
+| 2️⃣ | ViewController의 생명주기 | `1주차` | [블로그 링크✌🏻](https://mini-min-dev.tistory.com/33) |
+| 3️⃣ | weak self란 무엇일까? 메모리 참조 방법(strong, weak, unowned) | `1주차` | [블로그 링크✌🏻](https://mini-min-dev.tistory.com/83) |
+| 4️⃣ | xib, nib란? | `1주차` | [블로그 링크✌🏻](https://mini-min-dev.tistory.com/214) |
+| 5️⃣ | 클래스와 객체의 개념 정리하기 (상속, 추상화) | `1주차` | [블로그 링크✌🏻](https://mini-min-dev.tistory.com/117) |
 
 
