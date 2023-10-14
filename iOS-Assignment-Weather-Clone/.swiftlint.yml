@@ -1,0 +1,19 @@
+# 기본 활성화된 룰 중에 비활성화할 룰을 지정
+disabled_rules:
+- line_length
+- trailing_whitespace
+- nesting
+- function_parameter_count
+- function_body_length
+- cyclomatic_complexity
+- type_body_length
+- file_length
+- identifier_name
+- large_tuple
+
+# swiftlint를 적용하지 않게 설정할 파일 경로
+excluded:
+- Pods
+- iOS-Assignment-Weather-Clone/Sources/AppDelegate.swift
+- iOS-Assignment-Weather-Clone/Sources/SceneDelegate.swift
+
