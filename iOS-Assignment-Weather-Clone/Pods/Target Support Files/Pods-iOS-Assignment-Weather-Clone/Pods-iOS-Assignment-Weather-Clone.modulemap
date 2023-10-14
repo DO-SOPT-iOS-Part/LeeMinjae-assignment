@@ -1,0 +1,6 @@
+framework module Pods_iOS_Assignment_Weather_Clone {
+  umbrella header "Pods-iOS-Assignment-Weather-Clone-umbrella.h"
+
+  export *
+  module * { export * }
+}
