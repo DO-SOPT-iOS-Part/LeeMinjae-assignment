@@ -1,8 +1,8 @@
 //
 //  AppDelegate.swift
-//  sopt33-assignment-Weather
+//  iOS-Assignment-Weather-Clone
 //
-//  Created by 민 on 10/8/23.
+//  Created by 민 on 10/14/23.
 //
 
 import UIKit
