@@ -11,8 +11,11 @@ import SnapKit
 class DetailViewController: UIViewController {
     
     // MARK: - Properties
-    // private let weatherLabel = UILabel()
-    
+    private let detailVerticalScrollView = UIScrollView()
+    private let detailVerticalContentView = UIView()
+    private let detailHorizontalScrollView = UIScrollView()
+    private let detailHorizontalContentView = UIView()
+
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +32,7 @@ class DetailViewController: UIViewController {
 extension DetailViewController {
     // UI 세팅
     private func setupUI() {
+        self.view.backgroundColor = .white
         // rself.view.addSubViews(<#Views#>)
         
         setupLayout()
@@ -46,4 +50,5 @@ extension DetailViewController {
     }
     
 }
+
 
