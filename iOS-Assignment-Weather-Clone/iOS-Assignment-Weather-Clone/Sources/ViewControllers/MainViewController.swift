@@ -28,27 +28,27 @@ final class MainViewController: UIViewController {
     private let myLocationLabel = UILabel().then {
         $0.text = "My Location"
         $0.textColor = .white
-        $0.font = UIFont(name: "SFPro-Heavy", size: 25)
+        $0.font = .bold(size: 25)
     }
     private let cityLabel = UILabel().then {
         $0.text = "천안시"
         $0.textColor = .white
-        $0.font = UIFont(name: "SFPro-Light", size: 16)
+        $0.font = .light(size: 16)
     }
     private let weatherLabel = UILabel().then {
         $0.text = "흐림"
         $0.textColor = .white
-        $0.font = UIFont(name: "SFPro-Light", size: 16)
+        $0.font = .light(size: 16)
     }
     private let tempLabel = UILabel().then {
         $0.text = "21°"
         $0.textColor = .white
-        $0.font = UIFont(name: "SFPro-Medium", size: 53)
+        $0.font = .medium(size: 53)
     }
     private let maxMinTempLabel = UILabel().then {
         $0.text = "최고:29° 최저:29°"
         $0.textColor = .white
-        $0.font = UIFont(name: "SFPro-Light", size: 15)
+        $0.font = .light(size: 15)
     }
     
     // MARK: - View Life Cycle
