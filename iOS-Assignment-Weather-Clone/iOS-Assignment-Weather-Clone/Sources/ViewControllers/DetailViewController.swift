@@ -14,10 +14,11 @@ final class DetailViewController: UIViewController {
     // MARK: - UI Components
     private let detailVerticalScrollView = UIScrollView().then {
         $0.showsVerticalScrollIndicator = false
+        $0.alwaysBounceVertical = true
     }
-    private let detailVerticalContentView = UIView()
     private let backgroundImageView = UIImageView().then {
         $0.image = #imageLiteral(resourceName: "bgCloudImage")
+        $0.contentMode = .scaleAspectFill
     }
     private let locationLabel = UILabel().then {
         $0.text = "천안시"
@@ -59,23 +60,23 @@ final class DetailViewController: UIViewController {
         $0.backgroundColor = .white.withAlphaComponent(0.25)
     }
     private let detailHorizontalScrollView = UIScrollView().then {
-        $0.isScrollEnabled = true
         $0.showsHorizontalScrollIndicator = false
+        
     }
     private let timeStackView = UIStackView().then {
         $0.axis = .horizontal
         $0.spacing = 22
     }
-    let nowWeatherView = DetailTimeWeatherView()
-    let firstWeatherView = DetailTimeWeatherView()
-    let secondWeatherView = DetailTimeWeatherView()
-    let thirdWeatherView = DetailTimeWeatherView()
-    let fourthWeatherView = DetailTimeWeatherView()
-    let fifthWeatherView = DetailTimeWeatherView()
-    let sixthWeatherView = DetailTimeWeatherView()
-    let seventhWeatherView = DetailTimeWeatherView()
-    let eighthWeatherView = DetailTimeWeatherView()
-    let ninthWeatherView = DetailTimeWeatherView()
+    lazy var nowWeatherView = DetailTimeWeatherView(time: "Now", state: .cloud, temp: 20)
+    lazy var firstWeatherView = DetailTimeWeatherView(time: "10시", state: .cloud, temp: 20)
+    lazy var secondWeatherView = DetailTimeWeatherView(time: "11시", state: .cloud, temp: 20)
+    lazy var thirdWeatherView = DetailTimeWeatherView(time: "12시", state: .cloud, temp: 20)
+    lazy var fourthWeatherView = DetailTimeWeatherView(time: "13시", state: .cloud, temp: 20)
+    lazy var fifthWeatherView = DetailTimeWeatherView(time: "14시", state: .cloud, temp: 20)
+    lazy var sixthWeatherView = DetailTimeWeatherView(time: "15시", state: .cloud, temp: 20)
+    lazy var seventhWeatherView = DetailTimeWeatherView(time: "16시", state: .cloud, temp: 20)
+    lazy var eighthWeatherView = DetailTimeWeatherView(time: "17시", state: .cloud, temp: 20)
+    lazy var ninthWeatherView = DetailTimeWeatherView(time: "18시", state: .cloud, temp: 20)
     
     // MARK: - View Life Cycle
     override func viewDidLoad() {
@@ -83,9 +84,6 @@ final class DetailViewController: UIViewController {
         
         setupUI()
     }
-    
-    // MARK: - @IBAction Properties
-    
     
 }
 
@@ -95,13 +93,11 @@ extension DetailViewController {
     private func setupUI() {
         self.navigationController?.isNavigationBarHidden = true
         detailVerticalScrollView.contentInsetAdjustmentBehavior = .never
-        
-        self.view.addSubview(detailVerticalScrollView)
-        self.detailVerticalScrollView.addSubview(detailVerticalContentView)
-        self.detailVerticalContentView.addSubview(backgroundImageView)
-        self.backgroundImageView.addSubViews(locationLabel, tempLabel, weatherLabel, maxMinTempLabel, timeWeatherView)
+
+        self.view.addSubViews(backgroundImageView, detailVerticalScrollView)
+        self.detailVerticalScrollView.addSubViews(locationLabel, tempLabel, weatherLabel, maxMinTempLabel, timeWeatherView)
         self.timeWeatherView.addSubViews(weatherSummaryLabel, lineView, detailHorizontalScrollView)
-        self.detailHorizontalScrollView.addSubview(timeStackView)
+        self.detailHorizontalScrollView.addSubViews(timeStackView)
         self.timeStackView.addArrangeSubViews(nowWeatherView, firstWeatherView, secondWeatherView, thirdWeatherView, fourthWeatherView, fifthWeatherView, sixthWeatherView, seventhWeatherView, eighthWeatherView, ninthWeatherView)
         
         setupLayout()
@@ -112,34 +108,22 @@ extension DetailViewController {
         detailVerticalScrollView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        detailVerticalContentView.snp.makeConstraints { make in
-            make.top.bottom.centerX.width.equalToSuperview()
-            make.height.equalTo(1000)
-        }
         backgroundImageView.snp.makeConstraints { make in
-            make.top.bottom.centerX.width.equalToSuperview()
+            make.edges.equalToSuperview()
         }
         locationLabel.snp.makeConstraints { make in
-            make.width.equalTo(133)
-            make.height.equalTo(38)
             make.centerX.equalToSuperview()
             make.top.equalToSuperview().inset(78)
         }
         tempLabel.snp.makeConstraints { make in
-            make.width.equalTo(200)
-            make.height.equalTo(108)
             make.centerX.equalToSuperview()
             make.top.equalTo(locationLabel.snp.bottom).inset(-4)
         }
         weatherLabel.snp.makeConstraints { make in
-            make.width.equalTo(45)
-            make.height.equalTo(30)
             make.centerX.equalToSuperview()
             make.top.equalTo(tempLabel.snp.bottom).inset(-4)
         }
         maxMinTempLabel.snp.makeConstraints { make in
-            make.width.equalTo(153)
-            make.height.equalTo(24)
             make.centerX.equalToSuperview()
             make.top.equalTo(weatherLabel.snp.bottom).inset(-4)
         }
@@ -151,7 +135,6 @@ extension DetailViewController {
         }
         weatherSummaryLabel.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(15)
-            make.height.equalTo(45)
             make.top.equalToSuperview().inset(10)
         }
         lineView.snp.makeConstraints { make in
@@ -160,14 +143,13 @@ extension DetailViewController {
             make.leading.trailing.equalToSuperview()
         }
         detailHorizontalScrollView.snp.makeConstraints { make in
-            make.top.equalTo(lineView.snp.bottom).inset(-14)
+            make.top.equalTo(lineView.snp.bottom).offset(14)
             make.leading.equalToSuperview().inset(15)
-            make.trailing.equalToSuperview().inset(12)
+            make.trailing.equalToSuperview()
             make.bottom.equalToSuperview().inset(10)
         }
         timeStackView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
     }
-    
 }

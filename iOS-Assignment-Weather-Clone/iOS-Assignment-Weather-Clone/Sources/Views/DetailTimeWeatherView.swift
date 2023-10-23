@@ -9,6 +9,14 @@ import UIKit
 import SnapKit
 import Then
 
+enum WeatherState {
+    case cloud
+    case heavyRain
+    case lightning
+    case smallRain
+    case sunnyRain
+}
+
 class DetailTimeWeatherView: UIView {
     
     // MARK: - UI Components
@@ -17,9 +25,7 @@ class DetailTimeWeatherView: UIView {
         $0.textColor = .white
         $0.font = .medium(size: 17)
     }
-    let timeViewWeatherImage = UIImageView().then {
-        $0.image = #imageLiteral(resourceName: "sunnyRainIcon")
-    }
+    let timeViewWeatherImage = UIImageView()
     let timeViewTempLabel = UILabel().then {
         $0.text = "21°"
         $0.textColor = .white
@@ -27,42 +33,61 @@ class DetailTimeWeatherView: UIView {
     }
     
     // MARK: - View Life Cycle
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(time: String = "", state: WeatherState, temp: Int) {
+        super.init(frame: .zero)
+        timeViewTimeLabel.text = time
+        setViewState(state: state)
+        timeViewTempLabel.text = String(temp) + "˚"
+        
         setupUI()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    // MARK: - UI, Layout Setting
-    private func setupUI() {
+}
+
+extension DetailTimeWeatherView {
+    // UI 세팅
+    func setupUI() {
         self.addSubViews(timeViewTimeLabel, timeViewWeatherImage, timeViewTempLabel)
         
         setupLayout()
     }
     
-    private func setupLayout() {
+    // 레이아웃 세팅
+    func setupLayout() {
         self.snp.makeConstraints {
             $0.height.equalTo(122)
             $0.width.equalTo(44)
         }
-        
-        timeViewTimeLabel.snp.makeConstraints {
-            $0.top.equalToSuperview()
-            $0.centerX.equalToSuperview()
+        timeViewTimeLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.centerX.equalToSuperview()
         }
-        
-        timeViewWeatherImage.snp.makeConstraints {
-            $0.top.equalTo(timeViewTimeLabel.snp.bottom).offset(14)
-            $0.width.height.equalTo(44)
-            $0.centerX.equalToSuperview()
+        timeViewWeatherImage.snp.makeConstraints { make in
+            make.top.equalTo(timeViewTimeLabel.snp.bottom).offset(14)
+            make.width.height.equalTo(34)
+            make.centerX.equalToSuperview()
         }
-        
-        timeViewTempLabel.snp.makeConstraints {
-            $0.top.equalTo(timeViewWeatherImage.snp.bottom).offset(14)
-            $0.centerX.equalToSuperview()
+        timeViewTempLabel.snp.makeConstraints { make in
+            make.top.equalTo(timeViewWeatherImage.snp.bottom).offset(14)
+            make.centerX.equalToSuperview()
+        }
+    }
+    
+    func setViewState(state: WeatherState) {
+        switch state {
+        case .cloud:
+            timeViewWeatherImage.image = #imageLiteral(resourceName: "CloudIcon")
+        case .heavyRain:
+            timeViewWeatherImage.image = #imageLiteral(resourceName: "heavyRainIcon")
+        case .lightning:
+            timeViewWeatherImage.image = #imageLiteral(resourceName: "lightningIcon")
+        case .smallRain:
+            timeViewWeatherImage.image = #imageLiteral(resourceName: "SmallRainIcon")
+        case .sunnyRain:
+            timeViewWeatherImage.image = #imageLiteral(resourceName: "sunnyRainIcon")
         }
     }
 }
