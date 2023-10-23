@@ -12,41 +12,57 @@ import Then
 class DetailTimeWeatherView: UIView {
     
     // MARK: - UI Components
-    private let timeStackView = UIStackView().then {
-        $0.axis = .horizontal
-        $0.distribution = .fillEqually
-        $0.spacing = 5
+    let timeViewTimeLabel = UILabel().then {
+        $0.text = "0시"
+        $0.textColor = .white
+        $0.font = .medium(size: 17)
     }
-    private let firstTimeView = UIView().then {
-        let timeViewTimeLabel = UILabel()
-        let timeViewWeatherImage = UIImageView()
-        let timeViewTempLabel = UILabel()
-        
-        timeViewTempLabel.text = "Now"
-        timeViewTempLabel.font = .light(size: 17)
-        timeViewTempLabel.textColor = .white
-        timeViewWeatherImage.image = #imageLiteral(resourceName: "sunnyRainIcon")
-        timeViewTempLabel.text = "29°"
-        timeViewTempLabel.font = .light(size: 22)
-        timeViewTempLabel.textColor = .white
+    let timeViewWeatherImage = UIImageView().then {
+        $0.image = #imageLiteral(resourceName: "sunnyRainIcon")
+    }
+    let timeViewTempLabel = UILabel().then {
+        $0.text = "21°"
+        $0.textColor = .white
+        $0.font = .medium(size: 22)
+    }
     
-        $0.addSubViews(timeViewTimeLabel, timeViewWeatherImage, timeViewTempLabel)
-        
-        timeViewTempLabel.snp.makeConstraints { make in
-        }
-        timeViewWeatherImage.snp.makeConstraints { make in
-        }
-        timeViewTempLabel.snp.makeConstraints { make in
-        }
-        
+    // MARK: - View Life Cycle
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupUI()
     }
-
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
-    */
-
+    
+    // MARK: - UI, Layout Setting
+    private func setupUI() {
+        self.addSubViews(timeViewTimeLabel, timeViewWeatherImage, timeViewTempLabel)
+        
+        setupLayout()
+    }
+    
+    private func setupLayout() {
+        self.snp.makeConstraints {
+            $0.height.equalTo(122)
+            $0.width.equalTo(44)
+        }
+        
+        timeViewTimeLabel.snp.makeConstraints {
+            $0.top.equalToSuperview()
+            $0.centerX.equalToSuperview()
+        }
+        
+        timeViewWeatherImage.snp.makeConstraints {
+            $0.top.equalTo(timeViewTimeLabel.snp.bottom).offset(14)
+            $0.width.height.equalTo(44)
+            $0.centerX.equalToSuperview()
+        }
+        
+        timeViewTempLabel.snp.makeConstraints {
+            $0.top.equalTo(timeViewWeatherImage.snp.bottom).offset(14)
+            $0.centerX.equalToSuperview()
+        }
+    }
 }

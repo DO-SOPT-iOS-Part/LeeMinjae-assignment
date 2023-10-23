@@ -12,7 +12,9 @@ import Then
 final class DetailViewController: UIViewController {
     
     // MARK: - UI Components
-    private let detailVerticalScrollView = UIScrollView()
+    private let detailVerticalScrollView = UIScrollView().then {
+        $0.showsVerticalScrollIndicator = false
+    }
     private let detailVerticalContentView = UIView()
     private let backgroundImageView = UIImageView().then {
         $0.image = #imageLiteral(resourceName: "bgCloudImage")
@@ -56,8 +58,24 @@ final class DetailViewController: UIViewController {
     private let lineView = UIView().then {
         $0.backgroundColor = .white.withAlphaComponent(0.25)
     }
-    private let detailHorizontalScrollView = UIScrollView()
-    private let detailHorizontalContentView = UIView()
+    private let detailHorizontalScrollView = UIScrollView().then {
+        $0.isScrollEnabled = true
+        $0.showsHorizontalScrollIndicator = false
+    }
+    private let timeStackView = UIStackView().then {
+        $0.axis = .horizontal
+        $0.spacing = 22
+    }
+    let nowWeatherView = DetailTimeWeatherView()
+    let firstWeatherView = DetailTimeWeatherView()
+    let secondWeatherView = DetailTimeWeatherView()
+    let thirdWeatherView = DetailTimeWeatherView()
+    let fourthWeatherView = DetailTimeWeatherView()
+    let fifthWeatherView = DetailTimeWeatherView()
+    let sixthWeatherView = DetailTimeWeatherView()
+    let seventhWeatherView = DetailTimeWeatherView()
+    let eighthWeatherView = DetailTimeWeatherView()
+    let ninthWeatherView = DetailTimeWeatherView()
     
     // MARK: - View Life Cycle
     override func viewDidLoad() {
@@ -83,7 +101,8 @@ extension DetailViewController {
         self.detailVerticalContentView.addSubview(backgroundImageView)
         self.backgroundImageView.addSubViews(locationLabel, tempLabel, weatherLabel, maxMinTempLabel, timeWeatherView)
         self.timeWeatherView.addSubViews(weatherSummaryLabel, lineView, detailHorizontalScrollView)
-        self.detailHorizontalScrollView.addSubview(detailHorizontalContentView)
+        self.detailHorizontalScrollView.addSubview(timeStackView)
+        self.timeStackView.addArrangeSubViews(nowWeatherView, firstWeatherView, secondWeatherView, thirdWeatherView, fourthWeatherView, fifthWeatherView, sixthWeatherView, seventhWeatherView, eighthWeatherView, ninthWeatherView)
         
         setupLayout()
     }
@@ -126,7 +145,7 @@ extension DetailViewController {
         }
         timeWeatherView.snp.makeConstraints { make in
             make.top.equalTo(maxMinTempLabel.snp.bottom).inset(-44)
-            make.width.equalTo(335)
+            make.leading.trailing.equalToSuperview().inset(20)
             make.height.equalTo(212)
             make.centerX.equalToSuperview()
         }
@@ -141,12 +160,13 @@ extension DetailViewController {
             make.leading.trailing.equalToSuperview()
         }
         detailHorizontalScrollView.snp.makeConstraints { make in
-            make.top.equalTo(lineView.snp.bottom)
-            make.leading.trailing.bottom.equalToSuperview()
+            make.top.equalTo(lineView.snp.bottom).inset(-14)
+            make.leading.equalToSuperview().inset(15)
+            make.trailing.equalToSuperview().inset(12)
+            make.bottom.equalToSuperview().inset(10)
         }
-        detailHorizontalContentView.snp.makeConstraints { make in
-            make.top.bottom.centerX.width.equalToSuperview()
-            make.width.equalTo(1000)
+        timeStackView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
         }
     }
     

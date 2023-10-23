@@ -61,7 +61,7 @@ final class MainViewController: UIViewController {
     
     // MARK: - @IBAction Properties
     @objc func pushToDetailVC(sender: UITapGestureRecognizer) {
-        let detailVC = DetailPageViewController()
+        let detailVC = DetailViewController()
         self.navigationController?.pushViewController(detailVC, animated: true)
     }
 }
