@@ -12,24 +12,26 @@ import Then
 class DetailPageViewController: UIViewController {
     
     // MARK: - Properties
-    var viewControllersArray: [DetailViewController] = [DetailViewController(), DetailViewController()]
+    var viewControllersArray: [DetailViewController] = []
     
     // MARK: - UI Components
     private var pageVC = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
-    private var pageControl = UIPageControl().then {
-        $0.backgroundColor = .clear
-        $0.layer.addBorder([.top], color: .white, width: 0.4)
-    }
+    private let toolbar = UIToolbar()
     private let mapButton = UIButton().then {
         $0.setImage(UIImage(named: "mapIcon"), for: .normal)
     }
     private let listButton = UIButton().then {
         $0.setImage(UIImage(named: "listIcon"), for: .normal)
     }
-
+    private var pageControl = UIPageControl().then {
+        $0.currentPageIndicatorTintColor = .white
+        $0.backgroundColor = .clear
+        $0.setIndicatorImage(UIImage(named: "arrowIcon"), forPage: 0)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         pageVC.dataSource = self
         pageVC.delegate = self
         setupUI()
@@ -39,58 +41,86 @@ class DetailPageViewController: UIViewController {
     @objc func popToMainVC() {
         self.navigationController?.popViewController(animated: true)
     }
-
+    
 }
 
 // MARK: - Extensions
 extension DetailPageViewController {
     // UI 세팅
     private func setupUI() {
-        self.view.addSubViews(pageVC.view, pageControl)
-        pageVC.setViewControllers([viewControllersArray.first!], direction: .forward, animated: true)
-        pageControl.numberOfPages = viewControllersArray.count
-        pageControl.currentPage = 0
-        pageControl.isUserInteractionEnabled = false
-        
+        self.view.addSubViews(pageVC.view, toolbar)
         
         setupLayout()
+        setupToolBar()
+        setupTargets()
     }
     
     // 레이아웃 세팅
     private func setupLayout() {
+        toolbar.snp.makeConstraints { make in
+            make.bottom.trailing.leading.equalToSuperview()
+            make.height.equalTo(30)
+        }
+        addChild(pageVC)
+        
         pageVC.view.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(toolbar.snp.top)
         }
-        pageControl.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-            make.height.equalTo(82)
-            make.bottom.equalToSuperview()
-        }
+        
     }
     
+    private func setupPageVC(index: Int) {
+        pageVC.setViewControllers([viewControllersArray[index]], direction: .forward, animated: true)
+        pageVC.didMove(toParent: self)
+        pageControl.currentPage = viewControllersArray[index].view.tag
+    }
+    
+    private func setupToolBar() {
+        toolbar.backgroundColor = .red
+        toolbar.tintColor = .white
+        toolbar.layer.addBorder([.top], color: .white, width: 1)
+        
+        let leftButton = UIBarButtonItem(customView: mapButton)
+        let rightButton = UIBarButtonItem(customView: listButton)
+        let pageControl = UIBarButtonItem(customView: pageControl)
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
+        
+        toolbar.setItems([leftButton, flexibleSpace, pageControl, rightButton], animated: true)
+    }
+    
+    private func setupTargets() {
+        
+    }
 }
 
-// MARK: - UIPageViewControllerDelegate/DataSource Extensions
+// MARK: - UIPageViewController Delegate
 extension DetailPageViewController: UIPageViewControllerDelegate {
-    
+    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+        guard completed else { return }
+        
+        if let vc = pageViewController.viewControllers?.first {
+            pageControl.currentPage = vc.view.tag
+        }
+    }
 }
 
+// MARK: - UIPageViewController DataSource
 extension DetailPageViewController: UIPageViewControllerDataSource {
-    func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        var index = viewController.view.tag
-        pageControl.currentPage = index
-        index = index + 1
-        return viewControllersArray[index]
-    }
-    
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        var index = viewController.view.tag
-        pageControl.currentPage = index
-        index = index - 1
-        if index < 0 { return nil }
-        return viewControllersArray[index]
+        guard let index = pageViewController.viewControllers?.first?.view.tag else { return nil }
+        let previousIndex = index - 1
+        if previousIndex < 0 || viewControllersArray.count <= previousIndex { return nil }
+        
+        return viewControllersArray[previousIndex]
     }
     
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
+        guard let index = pageViewController.viewControllers?.first?.view.tag else { return nil }
+        let nextIndex = index + 1
+        if viewControllersArray.count <= nextIndex { return nil }
+        
+        return viewControllersArray[nextIndex]
+    }
     
 }
-
