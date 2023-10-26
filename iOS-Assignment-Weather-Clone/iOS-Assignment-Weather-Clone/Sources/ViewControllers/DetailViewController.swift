@@ -11,6 +11,8 @@ import Then
 
 final class DetailViewController: UIViewController {
     
+    var indexNumber: Int = 0
+    
     // MARK: - UI Components
     private let detailVerticalScrollView = UIScrollView().then {
         $0.showsVerticalScrollIndicator = false

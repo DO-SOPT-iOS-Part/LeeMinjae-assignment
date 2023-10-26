@@ -15,7 +15,7 @@ class DetailPageViewController: UIViewController {
     var viewControllersArray: [DetailViewController] = []
     
     // MARK: - UI Components
-    private var pageVC = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+    var pageVC = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
     private let toolbar = UIToolbar()
     private let mapButton = UIButton().then {
         $0.setImage(UIImage(named: "mapIcon"), for: .normal)
@@ -38,8 +38,11 @@ class DetailPageViewController: UIViewController {
     }
     
     // MARK: - @IBAction Properties
-    @objc func popToMainVC() {
+    @objc func popToMainVC(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
+    }
+    @objc func pageControltapped(_ sender: UIPageControl) {
+        pageVC.setViewControllers([viewControllersArray[sender.currentPage]], direction: .forward, animated: true, completion: nil)
     }
     
 }
@@ -62,7 +65,6 @@ extension DetailPageViewController {
             make.height.equalTo(30)
         }
         addChild(pageVC)
-        
         pageVC.view.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
             make.bottom.equalTo(toolbar.snp.top)
@@ -90,6 +92,8 @@ extension DetailPageViewController {
     }
     
     private func setupTargets() {
+        listButton.addTarget(self, action: #selector(popToMainVC(_:)), for: .touchUpInside)
+        pageControl.addTarget(self, action: #selector(pageControltapped(_:)), for: .valueChanged)
         
     }
 }

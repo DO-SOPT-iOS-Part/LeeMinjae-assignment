@@ -61,10 +61,21 @@ final class MainViewController: UIViewController {
     
     // MARK: - @IBAction Properties
     @objc func pushToDetailVC(sender: UITapGestureRecognizer) {
-        let detailVC = DetailViewController()
-        self.navigationController?.pushViewController(detailVC, animated: true)
+        let detailPageViewController = DetailPageViewController()
+        for index in 0..<2 {
+            let detailViewController = DetailViewController()
+            detailViewController.indexNumber = index
+            detailPageViewController.viewControllersArray.append(detailViewController)
+        }
+        let firstViewController = detailPageViewController.viewControllersArray[0]
+        detailPageViewController.pageVC.setViewControllers([firstViewController], direction: .forward, animated: true)
+        detailPageViewController.viewControllersArray[0].indexNumber = 0
+        self.navigationController?.pushViewController(detailPageViewController, animated: true)
     }
+    // let detailVC = DetailViewController()
+    // self.navigationController?.pushViewController(detailVC, animated: true)
 }
+
 
 // MARK: - Extensions
 extension MainViewController {
