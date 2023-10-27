@@ -64,7 +64,6 @@ class DetailViewController: UIViewController {
     }
     private let detailHorizontalScrollView = UIScrollView().then {
         $0.showsHorizontalScrollIndicator = false
-        
     }
     private let timeStackView = UIStackView().then {
         $0.axis = .horizontal
@@ -80,12 +79,28 @@ class DetailViewController: UIViewController {
     lazy var seventhWeatherView = DetailTimeWeatherView(time: "16시", state: .cloud, temp: 20)
     lazy var eighthWeatherView = DetailTimeWeatherView(time: "17시", state: .cloud, temp: 20)
     lazy var ninthWeatherView = DetailTimeWeatherView(time: "18시", state: .cloud, temp: 20)
+    private let toolbar = UIView().then {
+        $0.backgroundColor = UIColor(cgColor: CGColor(red: 42, green: 48, blue: 64, alpha: 0))
+        $0.layer.addBorder([.top], color: .systemGray4, width: 255)
+    }
+    private let mapButton = UIButton().then {
+        $0.setImage(UIImage(named: "mapIcon"), for: .normal)
+    }
+    private let listButton = UIButton().then {
+        $0.setImage(UIImage(named: "listIcon"), for: .normal)
+        $0.addTarget(self, action: #selector(popToMainVC), for: .touchUpInside)
+    }
     
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupUI()
+    }
+    
+    // MARK: - @IBAction Properties
+    @objc func popToMainVC(_ sender: UIButton) {
+        self.navigationController?.popViewController(animated: true)
     }
     
 }
@@ -97,7 +112,8 @@ extension DetailViewController {
         self.navigationController?.isNavigationBarHidden = true
         detailVerticalScrollView.contentInsetAdjustmentBehavior = .never
 
-        self.view.addSubViews(backgroundImageView, detailVerticalScrollView)
+        self.view.addSubViews(backgroundImageView, detailVerticalScrollView, toolbar)
+        self.toolbar.addSubViews(mapButton, listButton)
         self.detailVerticalScrollView.addSubViews(locationLabel, tempLabel, weatherLabel, maxMinTempLabel, timeWeatherView)
         self.timeWeatherView.addSubViews(weatherSummaryLabel, lineView, detailHorizontalScrollView)
         self.detailHorizontalScrollView.addSubViews(timeStackView)
@@ -109,7 +125,22 @@ extension DetailViewController {
     // 레이아웃 세팅
     private func setupLayout() {
         detailVerticalScrollView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.leading.trailing.top.equalToSuperview()
+            make.bottom.equalTo(toolbar.snp.top)
+        }
+        toolbar.snp.makeConstraints { make in
+            make.bottom.leading.trailing.equalToSuperview()
+            make.height.equalTo(82)
+        }
+        mapButton.snp.makeConstraints { make in
+            make.height.width.equalTo(44)
+            make.top.equalToSuperview().inset(4)
+            make.leading.equalToSuperview().inset(10)
+        }
+        listButton.snp.makeConstraints { make in
+            make.height.width.equalTo(44)
+            make.top.equalToSuperview().inset(4)
+            make.trailing.equalToSuperview().inset(10)
         }
         backgroundImageView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
