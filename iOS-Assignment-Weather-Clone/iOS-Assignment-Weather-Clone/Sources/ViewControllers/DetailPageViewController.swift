@@ -9,14 +9,18 @@ import UIKit
 import SnapKit
 import Then
 
-class DetailPageViewController: UIViewController {
+final class DetailPageViewController: UIViewController {
     
     // MARK: - Properties
-    var viewControllersArray: [DetailViewController] = []
+    lazy var viewControllersArray: [DetailViewController] = []
     
     // MARK: - UI Components
-    var pageVC = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
-    private let toolbar = UIToolbar()
+    let pageVC = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+    private let toolbar = UIToolbar().then {
+        $0.backgroundColor = .red
+        $0.tintColor = .white
+        $0.layer.addBorder([.top], color: .white, width: 1)
+    }
     private let mapButton = UIButton().then {
         $0.setImage(UIImage(named: "mapIcon"), for: .normal)
     }
@@ -29,20 +33,19 @@ class DetailPageViewController: UIViewController {
         $0.setIndicatorImage(UIImage(named: "arrowIcon"), forPage: 0)
     }
     
+    // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         pageVC.dataSource = self
         pageVC.delegate = self
+        
         setupUI()
     }
     
     // MARK: - @IBAction Properties
     @objc func popToMainVC(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
-    }
-    @objc func pageControltapped(_ sender: UIPageControl) {
-        pageVC.setViewControllers([viewControllersArray[sender.currentPage]], direction: .forward, animated: true, completion: nil)
     }
     
 }
@@ -51,7 +54,7 @@ class DetailPageViewController: UIViewController {
 extension DetailPageViewController {
     // UI 세팅
     private func setupUI() {
-        self.view.addSubViews(pageVC.view, toolbar)
+        self.view.addSubViews(pageVC.view)
         
         setupLayout()
         setupToolBar()
@@ -69,20 +72,15 @@ extension DetailPageViewController {
             make.top.leading.trailing.equalToSuperview()
             make.bottom.equalTo(toolbar.snp.top)
         }
-        
     }
     
-    private func setupPageVC(index: Int) {
+    func setupPageVC(index: Int) {
         pageVC.setViewControllers([viewControllersArray[index]], direction: .forward, animated: true)
         pageVC.didMove(toParent: self)
         pageControl.currentPage = viewControllersArray[index].view.tag
     }
     
     private func setupToolBar() {
-        toolbar.backgroundColor = .red
-        toolbar.tintColor = .white
-        toolbar.layer.addBorder([.top], color: .white, width: 1)
-        
         let leftButton = UIBarButtonItem(customView: mapButton)
         let rightButton = UIBarButtonItem(customView: listButton)
         let pageControl = UIBarButtonItem(customView: pageControl)
@@ -93,8 +91,7 @@ extension DetailPageViewController {
     
     private func setupTargets() {
         listButton.addTarget(self, action: #selector(popToMainVC(_:)), for: .touchUpInside)
-        pageControl.addTarget(self, action: #selector(pageControltapped(_:)), for: .valueChanged)
-        
+        // pageControl.addTarget(self, action: #selector(pageControltapped(_:)), for: .valueChanged)
     }
 }
 
@@ -112,19 +109,29 @@ extension DetailPageViewController: UIPageViewControllerDelegate {
 // MARK: - UIPageViewController DataSource
 extension DetailPageViewController: UIPageViewControllerDataSource {
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        guard let index = pageViewController.viewControllers?.first?.view.tag else { return nil }
-        let previousIndex = index - 1
-        if previousIndex < 0 || viewControllersArray.count <= previousIndex { return nil }
+        //        guard let index = pageViewController.viewControllers?.first?.view.tag else { return nil }
+        //        let previousIndex = index - 1
+        //        if previousIndex < 0 || viewControllersArray.count <= previousIndex { return nil }
+        //
+        //        return viewControllersArray[previousIndex]
         
-        return viewControllersArray[previousIndex]
+        if let index = self.viewControllersArray.firstIndex(of: viewController as! DetailViewController), index > 0 { 
+            return viewControllersArray[index - 1]
+        }
+        return nil
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        guard let index = pageViewController.viewControllers?.first?.view.tag else { return nil }
-        let nextIndex = index + 1
-        if viewControllersArray.count <= nextIndex { return nil }
+        //        guard let index = pageViewController.viewControllers?.first?.view.tag else { return nil }
+        //        let nextIndex = index + 1
+        //        if viewControllersArray.count <= nextIndex { return nil }
+        //
+        //        return viewControllersArray[nextIndex]
         
-        return viewControllersArray[nextIndex]
+        if let index = self.viewControllersArray.firstIndex(of: viewController as! DetailViewController), index < viewControllersArray.count - 1 {
+            return viewControllersArray[index + 1]
+        }
+        return nil
     }
     
 }

@@ -11,6 +11,54 @@ import Then
 
 final class MainViewController: UIViewController {
     
+    // MARK: - Properties
+    static let dummyLocationData: [WeatherLocation] = [
+        WeatherLocation(location: "천안시",
+                        weather: "흐림",
+                        temp: 18, maxTemp: 18, minTemp: 11,
+                        weatherSummary: "08:00~09:00에 강우 상태가, 18:00에 한때 흐린 상태가 예상됩니다.",
+                        timeWeatherList: [TimeWeather(time: "Now", weather: .cloud, temp: 18),
+                                          TimeWeather(time: "10시", weather: .cloud, temp: 18),
+                                          TimeWeather(time: "11시", weather: .cloud, temp: 18),
+                                          TimeWeather(time: "12시", weather: .cloud, temp: 18),
+                                          TimeWeather(time: "13시", weather: .cloud, temp: 18),
+                                          TimeWeather(time: "14시", weather: .cloud, temp: 18),
+                                          TimeWeather(time: "15시", weather: .cloud, temp: 18),
+                                          TimeWeather(time: "16시", weather: .cloud, temp: 18),
+                                          TimeWeather(time: "17시", weather: .cloud, temp: 18),
+                                          TimeWeather(time: "18시", weather: .cloud, temp: 18)],
+                        indexNumber: 0),
+        WeatherLocation(location: "수원시",
+                        weather: "흐림",
+                        temp: 18, maxTemp: 18, minTemp: 11,
+                        weatherSummary: "08:00~09:00에 강우 상태가, 18:00에 한때 흐린 상태가 예상됩니다.",
+                        timeWeatherList: [TimeWeather(time: "Now", weather: .cloud, temp: 18),
+                                          TimeWeather(time: "10시", weather: .cloud, temp: 18),
+                                          TimeWeather(time: "11시", weather: .cloud, temp: 18),
+                                          TimeWeather(time: "12시", weather: .cloud, temp: 18),
+                                          TimeWeather(time: "13시", weather: .cloud, temp: 18),
+                                          TimeWeather(time: "14시", weather: .cloud, temp: 18),
+                                          TimeWeather(time: "15시", weather: .cloud, temp: 18),
+                                          TimeWeather(time: "16시", weather: .cloud, temp: 18),
+                                          TimeWeather(time: "17시", weather: .cloud, temp: 18),
+                                          TimeWeather(time: "18시", weather: .cloud, temp: 18)],
+                        indexNumber: 1),
+        WeatherLocation(location: "광진구",
+                        weather: "흐림",
+                        temp: 18, maxTemp: 18, minTemp: 11,
+                        weatherSummary: "08:00~09:00에 강우 상태가, 18:00에 한때 흐린 상태가 예상됩니다.",
+                        timeWeatherList: [TimeWeather(time: "Now", weather: .cloud, temp: 18),
+                                          TimeWeather(time: "10시", weather: .cloud, temp: 18),
+                                          TimeWeather(time: "11시", weather: .cloud, temp: 18),
+                                          TimeWeather(time: "12시", weather: .cloud, temp: 18),
+                                          TimeWeather(time: "13시", weather: .cloud, temp: 18),
+                                          TimeWeather(time: "14시", weather: .cloud, temp: 18),
+                                          TimeWeather(time: "15시", weather: .cloud, temp: 18),
+                                          TimeWeather(time: "16시", weather: .cloud, temp: 18),
+                                          TimeWeather(time: "17시", weather: .cloud, temp: 18),
+                                          TimeWeather(time: "18시", weather: .cloud, temp: 18)],
+                        indexNumber: 2)]
+    
     // MARK: - UI Components
     private let searchController = UISearchController()
     private let mainContentView = UIView()
@@ -22,34 +70,9 @@ final class MainViewController: UIViewController {
         $0.distribution = .fillEqually
         $0.spacing = 15
     }
-    private let locationView = UIImageView().then {
-        $0.image = #imageLiteral(resourceName: "listCloudImage")
-    }
-    private let myLocationLabel = UILabel().then {
-        $0.text = "My Location"
-        $0.textColor = .white
-        $0.font = .bold(size: 25)
-    }
-    private let cityLabel = UILabel().then {
-        $0.text = "천안시"
-        $0.textColor = .white
-        $0.font = .light(size: 16)
-    }
-    private let weatherLabel = UILabel().then {
-        $0.text = "흐림"
-        $0.textColor = .white
-        $0.font = .light(size: 16)
-    }
-    private let tempLabel = UILabel().then {
-        $0.text = "21°"
-        $0.textColor = .white
-        $0.font = .medium(size: 53)
-    }
-    private let maxMinTempLabel = UILabel().then {
-        $0.text = "최고:29° 최저:29°"
-        $0.textColor = .white
-        $0.font = .light(size: 15)
-    }
+    let firstLocationView = MainLocationView(city: dummyLocationData[0].location, weather: dummyLocationData[0].weather, temp: dummyLocationData[0].temp, maxTemp: dummyLocationData[0].maxTemp, minTemp: dummyLocationData[0].minTemp, indexNum: dummyLocationData[0].indexNumber)
+    let secondLocationView = MainLocationView(city: dummyLocationData[1].location, weather: dummyLocationData[1].weather, temp: dummyLocationData[1].temp, maxTemp: dummyLocationData[1].maxTemp, minTemp: dummyLocationData[1].minTemp, indexNum: dummyLocationData[1].indexNumber)
+    let thirdLocationView = MainLocationView(city: dummyLocationData[2].location, weather: dummyLocationData[2].weather, temp: dummyLocationData[2].temp, maxTemp: dummyLocationData[2].maxTemp, minTemp: dummyLocationData[2].minTemp, indexNum: dummyLocationData[2].indexNumber)
     
     // MARK: - View Life Cycle
     override func viewDidLoad() {
@@ -61,19 +84,10 @@ final class MainViewController: UIViewController {
     
     // MARK: - @IBAction Properties
     @objc func pushToDetailVC(sender: UITapGestureRecognizer) {
-        let detailPageViewController = DetailPageViewController()
-        for index in 0..<2 {
-            let detailViewController = DetailViewController()
-            detailViewController.indexNumber = index
-            detailPageViewController.viewControllersArray.append(detailViewController)
-        }
-        let firstViewController = detailPageViewController.viewControllersArray[0]
-        detailPageViewController.pageVC.setViewControllers([firstViewController], direction: .forward, animated: true)
-        detailPageViewController.viewControllersArray[0].indexNumber = 0
-        self.navigationController?.pushViewController(detailPageViewController, animated: true)
+        
+        let detailVC = DetailViewController()
+        self.navigationController?.pushViewController(detailVC, animated: true)
     }
-    // let detailVC = DetailViewController()
-    // self.navigationController?.pushViewController(detailVC, animated: true)
 }
 
 
@@ -101,8 +115,7 @@ extension MainViewController {
         self.view.addSubview(mainScrollView)
         self.mainScrollView.addSubview(mainContentView)
         self.mainContentView.addSubview(locationStackView)
-        self.locationStackView.addArrangeSubViews(locationView)
-        self.locationView.addSubViews(myLocationLabel, cityLabel, weatherLabel, tempLabel, maxMinTempLabel)
+        self.locationStackView.addArrangeSubViews(firstLocationView, secondLocationView, thirdLocationView)
         
         mainScrollView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -114,47 +127,13 @@ extension MainViewController {
             make.top.bottom.equalToSuperview()
             make.leading.trailing.equalToSuperview().inset(20)
         }
-        locationView.snp.makeConstraints { make in
-            make.height.equalTo(117)
-            make.centerY.equalToSuperview()
-        }
-        myLocationLabel.snp.makeConstraints { make in
-            make.width.equalTo(200)
-            make.height.equalTo(30)
-            make.top.equalToSuperview().inset(10)
-            make.leading.equalToSuperview().inset(16)
-        }
-        cityLabel.snp.makeConstraints { make in
-            make.width.equalTo(60)
-            make.height.equalTo(20)
-            make.top.equalTo(myLocationLabel.snp.bottom).inset(0)
-            make.leading.equalToSuperview().inset(16)
-        }
-        weatherLabel.snp.makeConstraints { make in
-            make.width.equalTo(30)
-            make.height.equalTo(20)
-            make.leading.equalToSuperview().inset(16)
-            make.bottom.equalToSuperview().inset(11)
-        }
-        tempLabel.snp.makeConstraints { make in
-            make.width.equalTo(82)
-            make.height.equalTo(63)
-            make.top.equalToSuperview().inset(4)
-            make.trailing.equalToSuperview().inset(13)
-        }
-        maxMinTempLabel.snp.makeConstraints { make in
-            make.width.equalTo(120)
-            make.height.equalTo(20)
-            make.bottom.equalToSuperview().inset(11)
-            make.trailing.equalToSuperview().inset(13)
-        }
     }
     
     // GestureRecognizer 세팅
     private func setupGestureRecognizer() {
         let pushBtn = UITapGestureRecognizer(target: self, action: #selector(pushToDetailVC))
-        locationView.isUserInteractionEnabled = true
-        locationView.addGestureRecognizer(pushBtn)
+        firstLocationView.isUserInteractionEnabled = true
+        firstLocationView.addGestureRecognizer(pushBtn)
     }
     
 }

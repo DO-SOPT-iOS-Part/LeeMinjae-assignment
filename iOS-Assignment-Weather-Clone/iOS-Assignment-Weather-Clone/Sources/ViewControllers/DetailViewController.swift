@@ -9,8 +9,9 @@ import UIKit
 import SnapKit
 import Then
 
-final class DetailViewController: UIViewController {
+class DetailViewController: UIViewController {
     
+    // MARK: - Properties
     var indexNumber: Int = 0
     
     // MARK: - UI Components
