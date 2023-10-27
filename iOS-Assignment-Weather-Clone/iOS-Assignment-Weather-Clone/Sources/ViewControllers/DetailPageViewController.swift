@@ -33,6 +33,8 @@ final class DetailPageViewController: UIViewController {
 extension DetailPageViewController {
     // UI 세팅
     private func setupUI() {        
+        self.navigationController?.isNavigationBarHidden = true
+
         self.view.addSubViews(pageVC.view)
         addChild(pageVC)
         

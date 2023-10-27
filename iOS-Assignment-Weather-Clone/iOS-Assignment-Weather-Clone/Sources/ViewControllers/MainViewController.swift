@@ -103,7 +103,8 @@ final class MainViewController: UIViewController {
 // MARK: - Extensions
 extension MainViewController {
     // UI 세팅
-    private func setupUI() {
+    private func setupUI() {       
+        
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.barTintColor = .black
         navigationItem.title = "Weather"
@@ -115,7 +116,7 @@ extension MainViewController {
         navigationItem.rightBarButtonItem?.tintColor = .white
         navigationItem.searchController = searchController
         navigationItem.searchController?.searchBar.placeholder = "Search for a city or airport"
-        
+        navigationItem.hidesSearchBarWhenScrolling = false
         setupLayout()
     }
     

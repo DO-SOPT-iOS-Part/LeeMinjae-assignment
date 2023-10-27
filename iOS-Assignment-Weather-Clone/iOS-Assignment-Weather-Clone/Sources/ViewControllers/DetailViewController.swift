@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import Then
 
-class DetailViewController: UIViewController {
+final class DetailViewController: UIViewController {
     
     // MARK: - Properties
     var indexNumber: Int = 0
@@ -100,6 +100,7 @@ class DetailViewController: UIViewController {
     
     // MARK: - @IBAction Properties
     @objc func popToMainVC(_ sender: UIButton) {
+        navigationController?.isNavigationBarHidden = false
         self.navigationController?.popViewController(animated: true)
     }
     
