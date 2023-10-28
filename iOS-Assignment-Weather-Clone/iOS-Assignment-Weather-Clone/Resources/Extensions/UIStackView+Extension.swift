@@ -5,7 +5,6 @@
 //  Created by 민 on 10/14/23.
 //
 
-import Foundation
 import UIKit
 
 extension UIStackView {

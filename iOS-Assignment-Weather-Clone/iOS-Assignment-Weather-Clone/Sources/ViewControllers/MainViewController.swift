@@ -103,10 +103,10 @@ final class MainViewController: UIViewController {
 // MARK: - Extensions
 extension MainViewController {
     // UI 세팅
-    private func setupUI() {       
-        
+    private func setupUI() {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.barTintColor = .black
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
         navigationItem.title = "Weather"
         navigationController?.navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "moreIcon"),

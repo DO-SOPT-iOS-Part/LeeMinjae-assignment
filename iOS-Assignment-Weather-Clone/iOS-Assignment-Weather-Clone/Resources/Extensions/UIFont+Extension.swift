@@ -5,7 +5,6 @@
 //  Created by 민 on 10/16/23.
 //
 
-import Foundation
 import UIKit
 
 // MARK: - 폰트 명을 열거형으로 선언
