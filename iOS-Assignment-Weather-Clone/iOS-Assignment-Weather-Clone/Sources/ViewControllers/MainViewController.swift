@@ -14,43 +14,18 @@ final class MainViewController: UIViewController {
     // MARK: - UI Components
     private let searchController = UISearchController()
     private let mainContentView = UIView()
-    private let mainScrollView = UIScrollView().then() {
-        $0.alwaysBounceVertical = true
+    private let mainTableView = UITableView(frame: .zero, style: .insetGrouped).then {
+        $0.backgroundColor = .black
     }
-    private let locationStackView = UIStackView().then {
-        $0.axis = .vertical
-        $0.distribution = .fillEqually
-        $0.spacing = 15
-    }
-    let firstLocationView = MainLocationView(city: dummyLocationData[0].location, weather: dummyLocationData[0].weather, temp: dummyLocationData[0].temp, maxTemp: dummyLocationData[0].maxTemp, minTemp: dummyLocationData[0].minTemp, indexNum: dummyLocationData[0].indexNumber)
-    let secondLocationView = MainLocationView(city: dummyLocationData[1].location, weather: dummyLocationData[1].weather, temp: dummyLocationData[1].temp, maxTemp: dummyLocationData[1].maxTemp, minTemp: dummyLocationData[1].minTemp, indexNum: dummyLocationData[1].indexNumber)
-    let thirdLocationView = MainLocationView(city: dummyLocationData[2].location, weather: dummyLocationData[2].weather, temp: dummyLocationData[2].temp, maxTemp: dummyLocationData[2].maxTemp, minTemp: dummyLocationData[2].minTemp, indexNum: dummyLocationData[2].indexNumber)
     
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupUI()
-        setupGestureRecognizer()
-    }
-    
-    // MARK: - @IBAction Properties
-    @objc func pushToDetailVC(sender: UITapGestureRecognizer) {
-        let detailPageVC = DetailPageViewController()
-        
-        for index in 0..<3 {
-            let detailVC = DetailViewController()
-            detailVC.indexNumber = index
-            detailPageVC.viewControllersArray.append(detailVC)
-        }
-        
-        let firstVC = detailPageVC.viewControllersArray[0]
-        detailPageVC.pageVC.setViewControllers([firstVC], direction: .forward, animated: true)
-        
-        self.navigationController?.pushViewController(detailPageVC, animated: true)
+        self.setupUI()
+        self.setTableViewConfig()
     }
 }
-
 
 // MARK: - Extensions
 extension MainViewController {
@@ -69,33 +44,67 @@ extension MainViewController {
         navigationItem.searchController = searchController
         navigationItem.searchController?.searchBar.placeholder = "Search for a city or airport"
         navigationItem.hidesSearchBarWhenScrolling = false
+        
         setupLayout()
     }
     
     // 레이아웃 세팅
     private func setupLayout() {
-        self.view.addSubview(mainScrollView)
-        self.mainScrollView.addSubview(mainContentView)
-        self.mainContentView.addSubview(locationStackView)
-        self.locationStackView.addArrangeSubViews(firstLocationView, secondLocationView, thirdLocationView)
+        self.view.addSubViews(mainTableView)
         
-        mainScrollView.snp.makeConstraints { make in
+        mainTableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
-        }
-        mainContentView.snp.makeConstraints { make in
-            make.top.bottom.centerX.width.equalToSuperview()
-        }
-        locationStackView.snp.makeConstraints { make in
-            make.top.bottom.equalToSuperview()
-            make.leading.trailing.equalToSuperview().inset(20)
         }
     }
     
-    // GestureRecognizer 세팅
-    private func setupGestureRecognizer() {
-        let pushBtn = UITapGestureRecognizer(target: self, action: #selector(pushToDetailVC))
-        firstLocationView.isUserInteractionEnabled = true
-        firstLocationView.addGestureRecognizer(pushBtn)
+    private func setTableViewConfig() {
+        self.mainTableView.register(MainLocationTableViewCell.self,
+                                    forCellReuseIdentifier: MainLocationTableViewCell.identifier)
+        self.mainTableView.delegate = self
+        self.mainTableView.dataSource = self
     }
     
 }
+
+// MARK: - TableView Delegate
+extension MainViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 133
+    }
+        
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print(indexPath.row)
+    }
+    
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        let detailPageVC = DetailPageViewController()
+//        
+//        for index in 0..<3 {
+//            let detailVC = DetailViewController()
+//            detailVC.indexNumber = index
+//            detailPageVC.viewControllersArray.append(detailVC)
+//        }
+//        
+//        let firstVC = detailPageVC.viewControllersArray[0]
+//        detailPageVC.pageVC.setViewControllers([firstVC], direction: .forward, animated: true)
+//        
+//        self.navigationController?.pushViewController(detailPageVC, animated: true)
+//    }
+}
+
+// MARK: - TableView DataSource
+extension MainViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return dummyLocationData.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: MainLocationTableViewCell.identifier, for: indexPath) as? MainLocationTableViewCell else { return UITableViewCell() }
+        cell.bindData(data: dummyLocationData[indexPath.row], row: indexPath.row)
+        cell.selectionStyle = .none
+        return cell
+    }
+}
+

@@ -17,7 +17,7 @@ enum WeatherState {
     case sunnyRain
 }
 
-class DetailTimeWeatherView: UIView {
+final class DetailTimeWeatherView: UIView {
     
     // MARK: - UI Components
     let timeViewTimeLabel = UILabel().then {

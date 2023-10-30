@@ -39,8 +39,7 @@ let dummyLocationData: [WeatherLocation] = [
                                       TimeWeather(time: "15시", weather: .cloud, temp: 18),
                                       TimeWeather(time: "16시", weather: .cloud, temp: 18),
                                       TimeWeather(time: "17시", weather: .cloud, temp: 18),
-                                      TimeWeather(time: "18시", weather: .cloud, temp: 18)],
-                    indexNumber: 0),
+                                      TimeWeather(time: "18시", weather: .cloud, temp: 18)], indexNumber: 0),
     WeatherLocation(location: "수원시",
                     weather: "흐림",
                     temp: 18, maxTemp: 18, minTemp: 11,
@@ -54,8 +53,7 @@ let dummyLocationData: [WeatherLocation] = [
                                       TimeWeather(time: "15시", weather: .cloud, temp: 18),
                                       TimeWeather(time: "16시", weather: .cloud, temp: 18),
                                       TimeWeather(time: "17시", weather: .cloud, temp: 18),
-                                      TimeWeather(time: "18시", weather: .cloud, temp: 18)],
-                    indexNumber: 1),
+                                      TimeWeather(time: "18시", weather: .cloud, temp: 18)], indexNumber: 1),
     WeatherLocation(location: "광진구",
                     weather: "흐림",
                     temp: 18, maxTemp: 18, minTemp: 11,
@@ -69,5 +67,4 @@ let dummyLocationData: [WeatherLocation] = [
                                       TimeWeather(time: "15시", weather: .cloud, temp: 18),
                                       TimeWeather(time: "16시", weather: .cloud, temp: 18),
                                       TimeWeather(time: "17시", weather: .cloud, temp: 18),
-                                      TimeWeather(time: "18시", weather: .cloud, temp: 18)],
-                    indexNumber: 2)]
+                                      TimeWeather(time: "18시", weather: .cloud, temp: 18)], indexNumber: 2)]

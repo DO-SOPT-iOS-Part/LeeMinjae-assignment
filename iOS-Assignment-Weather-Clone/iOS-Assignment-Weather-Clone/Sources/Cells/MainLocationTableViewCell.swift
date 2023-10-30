@@ -1,16 +1,16 @@
 //
-//  MainLocationView.swift
+//  MainLocationTableViewCell.swift
 //  iOS-Assignment-Weather-Clone
 //
-//  Created by 민 on 10/27/23.
+//  Created by 민 on 10/30/23.
 //
 
 import UIKit
-import SnapKit
 
-class MainLocationView: UIView {
+final class MainLocationTableViewCell: UITableViewCell {
     
     // MARK: - Properties
+    static let identifier: String = "MainLocationTableViewCell"
     var indexNumber: Int = 0
     
     // MARK: - UI Components
@@ -40,38 +40,37 @@ class MainLocationView: UIView {
     }
     
     // MARK: - View Life Cycle
-    init(city: String, weather: String, temp: Int, maxTemp: Int, minTemp: Int, indexNum: Int) {
-        super.init(frame: CGRect())
-        weatherLabel.text = weather
-        cityLabel.text = city
-        tempLabel.text = String(temp) + "˚"
-        maxMinTempLabel.text = "최고:" + String(maxTemp) + "˚" + " 최저:" + String(minTemp) + "˚"
-        self.indexNumber = indexNum
-        
-        setupUI()
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.setupUI()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 0, left: 0, bottom: 16, right: 0))
+    }
+    
 }
 
 // MARK: - Extensions
-extension MainLocationView {
+extension MainLocationTableViewCell {
     // UI 세팅
     private func setupUI() {
-        self.addSubViews(weatherImageView)
+        contentView.addSubViews(weatherImageView)
         weatherImageView.addSubViews(myLocationLabel, cityLabel, weatherLabel, tempLabel, maxMinTempLabel)
-            
+        
         setupLayout()
     }
     
     // 레이아웃 세팅
     private func setupLayout() {
-        self.snp.makeConstraints { make in
-            make.height.equalTo(117)
-            make.width.equalTo(UIScreen.main.bounds.width - 40)
-        }
+        self.backgroundColor = .black
+        
         weatherImageView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
@@ -97,5 +96,12 @@ extension MainLocationView {
         }
     }
     
+    func bindData(data: WeatherLocation, row: Int) {
+        self.weatherLabel.text = data.weather
+        self.cityLabel.text = data.location
+        self.tempLabel.text = String(data.temp) + "˚"
+        self.maxMinTempLabel.text = "최고:" + String(data.maxTemp) + "˚" + " 최저:" + String(data.minTemp) + "˚"
+        self.indexNumber = row
+    }
 }
 
