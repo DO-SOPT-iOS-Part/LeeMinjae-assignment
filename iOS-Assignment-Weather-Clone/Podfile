@@ -8,5 +8,6 @@ target 'iOS-Assignment-Weather-Clone' do
   # Pods for iOS-Assignment-Weather-Clone
   pod 'SwiftLint'  
   pod 'SnapKit'
+  pod 'Then'
 
 end
