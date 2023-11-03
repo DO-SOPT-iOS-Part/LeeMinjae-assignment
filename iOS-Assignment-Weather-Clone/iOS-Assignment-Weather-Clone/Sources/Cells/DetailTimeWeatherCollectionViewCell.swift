@@ -1,43 +1,31 @@
 //
-//  DetailTimeWeatherView.swift
+//  DetailTimeWeatherCollectionViewCell.swift
 //  iOS-Assignment-Weather-Clone
 //
-//  Created by 민 on 10/22/23.
+//  Created by 민 on 10/31/23.
 //
 
 import UIKit
-import SnapKit
-import Then
 
-enum WeatherState {
-    case cloud
-    case heavyRain
-    case lightning
-    case smallRain
-    case sunnyRain
-}
-
-final class DetailTimeWeatherView: UIView {
+final class DetailTimeWeatherCollectionViewCell: UICollectionViewCell {
+    
+    // MARK: - Properties
+    static let identifier: String = "DetailTimeWeatherCollectionViewCell"
     
     // MARK: - UI Components
     let timeViewTimeLabel = UILabel().then {
-        $0.text = "0시"
         $0.textColor = .white
         $0.font = .medium(size: 17)
     }
     let timeViewWeatherImage = UIImageView()
     let timeViewTempLabel = UILabel().then {
-        $0.text = "21°"
         $0.textColor = .white
         $0.font = .medium(size: 22)
     }
     
     // MARK: - View Life Cycle
-    init(time: String = "", state: WeatherState, temp: Int) {
-        super.init(frame: .zero)
-        timeViewTimeLabel.text = time
-        setViewState(state: state)
-        timeViewTempLabel.text = String(temp) + "˚"
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         
         setupUI()
     }
@@ -47,20 +35,16 @@ final class DetailTimeWeatherView: UIView {
     }
 }
 
-extension DetailTimeWeatherView {
+// MARK: - Extensions
+extension DetailTimeWeatherCollectionViewCell {
     // UI 세팅
-    func setupUI() {
+    private func setupUI() {
         self.addSubViews(timeViewTimeLabel, timeViewWeatherImage, timeViewTempLabel)
         
-        setupLayout()
     }
     
     // 레이아웃 세팅
-    func setupLayout() {
-        self.snp.makeConstraints {
-            $0.height.equalTo(122)
-            $0.width.equalTo(44)
-        }
+    private func setupLayout() {
         timeViewTimeLabel.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.centerX.equalToSuperview()
@@ -74,6 +58,12 @@ extension DetailTimeWeatherView {
             make.top.equalTo(timeViewWeatherImage.snp.bottom).offset(14)
             make.centerX.equalToSuperview()
         }
+    }
+    
+    func bindData(data: TimeWeather) {
+        self.timeViewTimeLabel.text = data.time
+        setViewState(state: data.weather)
+        self.timeViewTempLabel.text = String(data.temp) + "˚"
     }
     
     func setViewState(state: WeatherState) {
@@ -90,4 +80,12 @@ extension DetailTimeWeatherView {
             timeViewWeatherImage.image = #imageLiteral(resourceName: "sunnyRainIcon")
         }
     }
+}
+
+enum WeatherState {
+    case cloud
+    case heavyRain
+    case lightning
+    case smallRain
+    case sunnyRain
 }
