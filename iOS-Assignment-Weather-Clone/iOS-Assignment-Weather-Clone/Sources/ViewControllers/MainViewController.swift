@@ -13,11 +13,16 @@ protocol LocationSelectedProtocol: NSObject {
     func dataSend(data: [TimeWeather])
 }
 
+enum Section: CaseIterable {
+    case main
+}
+
 final class MainViewController: UIViewController {
     
     // MARK: - Properties
     var delegate: LocationSelectedProtocol?
     var filteredLocationData = [WeatherLocation]()
+    var dataSource: UITableViewDiffableDataSource<Section, WeatherLocation>!
     
     // MARK: - UI Components
     private let searchController = UISearchController()
@@ -32,6 +37,7 @@ final class MainViewController: UIViewController {
         
         self.setupUI()
         self.setTableViewConfig()
+        self.performQuery(with: nil)
     }
 }
 
@@ -40,8 +46,9 @@ extension MainViewController {
     // UI 세팅
     private func setupUI() {
         
-        setNavigationBar()
         setupLayout()
+        setNavigationBar()
+        setSearchBar()
     }
     
     // 레이아웃 세팅
@@ -53,16 +60,7 @@ extension MainViewController {
         }
     }
     
-    private func setTableViewConfig() {
-        self.mainTableView.register(MainLocationTableViewCell.self,
-                                    forCellReuseIdentifier: MainLocationTableViewCell.identifier)
-        self.mainTableView.delegate = self
-        self.mainTableView.dataSource = self
-    }
-    
     private func setNavigationBar() {
-        setSearchBar()
-        
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.barTintColor = .black
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
@@ -74,7 +72,6 @@ extension MainViewController {
                                                             action: nil)
         navigationItem.rightBarButtonItem?.tintColor = .white
         navigationItem.hidesSearchBarWhenScrolling = false
-        
     }
     
     private func setSearchBar() {
@@ -84,6 +81,38 @@ extension MainViewController {
         
         let textFieldInsideSearchBar = navigationItem.searchController?.searchBar.value(forKey: "searchField") as? UITextField
         textFieldInsideSearchBar?.textColor = .white
+    }
+    
+    private func setTableViewConfig() {
+        self.mainTableView.register(MainLocationTableViewCell.self,
+                                    forCellReuseIdentifier: MainLocationTableViewCell.identifier)
+        self.mainTableView.delegate = self
+        
+        // self.mainTableView.dataSource = self
+        self.dataSource = UITableViewDiffableDataSource<Section, WeatherLocation>(tableView: mainTableView) { (tableView, indexPath, location) -> UITableViewCell? in
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: MainLocationTableViewCell.identifier, for: indexPath) as? MainLocationTableViewCell else { return UITableViewCell() }
+            
+            cell.bindData(data: location, row: indexPath.row)
+            cell.selectionStyle = .none
+            
+            return cell
+        }
+        
+        self.mainTableView.dataSource = dataSource
+    }
+    
+    func performQuery(with filter: String?) {
+        self.filteredLocationData = dummyLocationData.filter { return $0.location.lowercased().contains(filter ?? "".lowercased()) }
+        
+        // self.mainTableView.reloadData()
+        var snapshot = NSDiffableDataSourceSnapshot<Section, WeatherLocation>()
+        snapshot.appendSections([.main])
+        if self.isFilterting {
+            snapshot.appendItems(filteredLocationData)
+        } else {
+            snapshot.appendItems(dummyLocationData)
+        }
+        self.dataSource.apply(snapshot, animatingDifferences: true)
     }
 }
 
@@ -98,10 +127,8 @@ extension MainViewController: UISearchResultsUpdating {
     
     func updateSearchResults(for searchController: UISearchController) {
         guard let text = searchController.searchBar.text else { return }
-        self.filteredLocationData = dummyLocationData.filter { return $0.location.lowercased().contains(text.lowercased()) }
-        self.mainTableView.reloadData()
+        performQuery(with: text)
     }
-    
 }
 
 // MARK: - TableView Delegate
@@ -122,27 +149,7 @@ extension MainViewController: UITableViewDelegate {
         
         let firstVC = detailPageVC.viewControllersArray[indexPath.row]
         detailPageVC.pageVC.setViewControllers([firstVC], direction: .forward, animated: true)
-
-        self.navigationController?.pushViewController(detailPageVC, animated: true)
-    }
-}
-
-// MARK: - TableView DataSource
-extension MainViewController: UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.isFilterting ? self.filteredLocationData.count : dummyLocationData.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: MainLocationTableViewCell.identifier, for: indexPath) as? MainLocationTableViewCell else { return UITableViewCell() }
         
-        if self.isFilterting {
-            cell.bindData(data: filteredLocationData[indexPath.row], row: indexPath.row)
-        } else {
-            cell.bindData(data: dummyLocationData[indexPath.row], row: indexPath.row)
-        }
-        cell.selectionStyle = .none
-        return cell
+        self.navigationController?.pushViewController(detailPageVC, animated: true)
     }
 }

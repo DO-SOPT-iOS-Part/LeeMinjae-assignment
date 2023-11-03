@@ -7,7 +7,8 @@
 
 import Foundation
 
-struct WeatherLocation {
+struct WeatherLocation: Hashable {
+    
     let location: String
     let weather: String
     let temp: Int
@@ -18,7 +19,7 @@ struct WeatherLocation {
     let indexNumber: Int
 }
 
-struct TimeWeather {
+struct TimeWeather: Hashable {
     let time: String
     let weather: WeatherState
     let temp: Int
