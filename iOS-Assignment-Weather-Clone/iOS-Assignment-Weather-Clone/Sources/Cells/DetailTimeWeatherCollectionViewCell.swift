@@ -39,8 +39,8 @@ final class DetailTimeWeatherCollectionViewCell: UICollectionViewCell {
 extension DetailTimeWeatherCollectionViewCell {
     // UI 세팅
     private func setupUI() {
-        self.addSubViews(timeViewTimeLabel, timeViewWeatherImage, timeViewTempLabel)
-        
+        self.contentView.addSubViews(timeViewTimeLabel, timeViewWeatherImage, timeViewTempLabel)
+        self.setupLayout()
     }
     
     // 레이아웃 세팅

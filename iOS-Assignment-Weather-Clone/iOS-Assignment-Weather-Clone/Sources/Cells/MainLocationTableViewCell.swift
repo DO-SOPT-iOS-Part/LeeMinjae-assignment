@@ -61,7 +61,7 @@ final class MainLocationTableViewCell: UITableViewCell {
 extension MainLocationTableViewCell {
     // UI 세팅
     private func setupUI() {
-        contentView.addSubViews(weatherImageView)
+        self.contentView.addSubViews(weatherImageView)
         weatherImageView.addSubViews(myLocationLabel, cityLabel, weatherLabel, tempLabel, maxMinTempLabel)
         
         setupLayout()

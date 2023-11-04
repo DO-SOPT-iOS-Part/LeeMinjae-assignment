@@ -104,7 +104,6 @@ extension MainViewController {
     func performQuery(with filter: String?) {
         self.filteredLocationData = dummyLocationData.filter { return $0.location.lowercased().contains(filter ?? "".lowercased()) }
         
-        // self.mainTableView.reloadData()
         var snapshot = NSDiffableDataSourceSnapshot<Section, WeatherLocation>()
         snapshot.appendSections([.main])
         if self.isFilterting {

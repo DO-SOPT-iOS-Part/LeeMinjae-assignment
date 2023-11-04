@@ -64,7 +64,8 @@ final class DetailViewController: UIViewController {
         $0.backgroundColor = .white.withAlphaComponent(0.25)
     }
     private let detailHorizontalCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout()).then {
-        $0.backgroundColor = .black
+        $0.backgroundColor = .clear
+        $0.showsHorizontalScrollIndicator = false
     }
     private let toolbar = UIView().then {
         $0.backgroundColor = UIColor(cgColor: CGColor(red: 42, green: 48, blue: 64, alpha: 0))
@@ -83,6 +84,7 @@ final class DetailViewController: UIViewController {
         super.viewDidLoad()
         
         setupUI()
+        setCollectionViewLayout()
         setCollectionViewConfig()
     }
     
@@ -167,8 +169,17 @@ extension DetailViewController {
             make.top.equalTo(lineView.snp.bottom).offset(14)
             make.leading.equalToSuperview().inset(15)
             make.trailing.equalToSuperview()
-            make.bottom.equalToSuperview().inset(10)
+            make.bottom.equalToSuperview()
         }
+    }
+    
+    private func setCollectionViewLayout() {
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.itemSize = CGSize(width: 46, height: 140)
+        flowLayout.minimumLineSpacing = 22
+        flowLayout.minimumInteritemSpacing = 22
+        flowLayout.scrollDirection = .horizontal
+        self.detailHorizontalCollectionView.setCollectionViewLayout(flowLayout, animated: false)
     }
     
     private func setCollectionViewConfig() {
@@ -179,7 +190,7 @@ extension DetailViewController {
     }
 }
 
-// MARK: - CollectionView Delegate
+// MARK: - CollectionView DataSource
 extension DetailViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return dummyLocationData[0].timeWeatherList.count
@@ -194,30 +205,30 @@ extension DetailViewController: UICollectionViewDataSource {
     }
 }
 
-// MARK: - CollectionView DataSource
+// MARK: - CollectionView Delegate
 extension DetailViewController: UICollectionViewDelegate {
     
 }
 
 // MARK: - CollectionView Delegate Flow Layout
-extension DetailViewController: UICollectionViewDelegateFlowLayout {
-    // sizeForItemAt: 각 Cell의 크기를 CGSize 형태로 return
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 46, height: 144)
-    }
-    
-    // minimumInteritemSpacing: Cell 들의 좌,우 간격 지정
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 22
-    }
-    
-    // minimumLineSpacing: Cell 들의 위, 아래 간격 지정
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 22
-    }
-}
-
-    
+//extension DetailViewController: UICollectionViewDelegateFlowLayout {
+//    // sizeForItemAt: 각 Cell의 크기를 CGSize 형태로 return
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//        return CGSize(width: 46, height: 144)
+//    }
+//    
+//    // minimumInteritemSpacing: Cell 들의 좌,우 간격 지정
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+//        return 22
+//    }
+//    
+//    // minimumLineSpacing: Cell 들의 위, 아래 간격 지정
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+//        return 22
+//    }
+//}
+//
+//    
 
 
 
