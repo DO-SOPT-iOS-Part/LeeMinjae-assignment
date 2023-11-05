@@ -15,12 +15,14 @@ final class DetailTimeWeatherCollectionViewCell: UICollectionViewCell {
     static let identifier: String = "DetailTimeWeatherCollectionViewCell"
     
     // MARK: - UI Components
-    let timeViewTimeLabel = UILabel().then {
+    private let timeViewTimeLabel = UILabel().then {
         $0.textColor = .white
         $0.font = .medium(size: 17)
     }
-    let timeViewWeatherImage = UIImageView()
-    let timeViewTempLabel = UILabel().then {
+    private let timeViewWeatherImage = UIImageView().then {
+        $0.tintColor = .white
+    }
+    private let timeViewTempLabel = UILabel().then {
         $0.textColor = .white
         $0.font = .medium(size: 22)
     }
@@ -72,24 +74,18 @@ extension DetailTimeWeatherCollectionViewCell {
     
     func setViewState(state: WeatherState) {
         switch state {
+        case .sunny:
+            timeViewWeatherImage.image = UIImage(systemName: "sun.max.fill")
         case .cloud:
-            timeViewWeatherImage.image = #imageLiteral(resourceName: "CloudIcon")
+            timeViewWeatherImage.image = UIImage(systemName: "cloud.moon.fill")
         case .heavyRain:
-            timeViewWeatherImage.image = #imageLiteral(resourceName: "heavyRainIcon")
+            timeViewWeatherImage.image = UIImage(systemName: "cloud.heavyrain.fill")
         case .lightning:
-            timeViewWeatherImage.image = #imageLiteral(resourceName: "lightningIcon")
+            timeViewWeatherImage.image = UIImage(systemName: "cloud.bolt.fill")
         case .smallRain:
-            timeViewWeatherImage.image = #imageLiteral(resourceName: "SmallRainIcon")
+            timeViewWeatherImage.image = UIImage(systemName: "cloud.rain.fill")
         case .sunnyRain:
-            timeViewWeatherImage.image = #imageLiteral(resourceName: "sunnyRainIcon")
+            timeViewWeatherImage.image = UIImage(systemName: "cloud.sun.rain.fill")
         }
     }
-}
-
-enum WeatherState {
-    case cloud
-    case heavyRain
-    case lightning
-    case smallRain
-    case sunnyRain
 }
