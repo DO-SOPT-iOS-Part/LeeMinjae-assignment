@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import SnapKit
+import Then
 
 final class MainLocationTableViewCell: UITableViewCell {
     
@@ -64,7 +66,7 @@ extension MainLocationTableViewCell {
         self.contentView.addSubViews(weatherImageView)
         weatherImageView.addSubViews(myLocationLabel, cityLabel, weatherLabel, tempLabel, maxMinTempLabel)
         
-        setupLayout()
+        self.setupLayout()
     }
     
     // 레이아웃 세팅

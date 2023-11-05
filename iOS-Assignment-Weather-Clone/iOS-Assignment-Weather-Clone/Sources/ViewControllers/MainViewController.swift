@@ -46,9 +46,9 @@ extension MainViewController {
     // UI 세팅
     private func setupUI() {
         
-        setupLayout()
-        setNavigationBar()
-        setSearchBar()
+        self.setupLayout()
+        self.setNavigationBar()
+        self.setSearchBar()
     }
     
     // 레이아웃 세팅
@@ -60,6 +60,7 @@ extension MainViewController {
         }
     }
     
+    // 네비게이션바 세팅
     private func setNavigationBar() {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.barTintColor = .black
@@ -74,6 +75,7 @@ extension MainViewController {
         navigationItem.hidesSearchBarWhenScrolling = false
     }
     
+    // 서치바 세팅
     private func setSearchBar() {
         navigationItem.searchController = searchController
         navigationItem.searchController?.searchBar.placeholder = "Search for a city or airport"
@@ -83,12 +85,11 @@ extension MainViewController {
         textFieldInsideSearchBar?.textColor = .white
     }
     
+    // 테이블뷰 ㅅ[팅
     private func setTableViewConfig() {
         self.mainTableView.register(MainLocationTableViewCell.self,
                                     forCellReuseIdentifier: MainLocationTableViewCell.identifier)
         self.mainTableView.delegate = self
-        
-        // self.mainTableView.dataSource = self
         self.dataSource = UITableViewDiffableDataSource<Section, WeatherLocation>(tableView: mainTableView) { (tableView, indexPath, location) -> UITableViewCell? in
             guard let cell = tableView.dequeueReusableCell(withIdentifier: MainLocationTableViewCell.identifier, for: indexPath) as? MainLocationTableViewCell else { return UITableViewCell() }
             
@@ -101,7 +102,8 @@ extension MainViewController {
         self.mainTableView.dataSource = dataSource
     }
     
-    func performQuery(with filter: String?) {
+    // snapshot & apply 적용 부분
+    private func performQuery(with filter: String?) {
         self.filteredLocationData = dummyLocationData.filter { return $0.location.lowercased().contains(filter ?? "".lowercased()) }
         
         var snapshot = NSDiffableDataSourceSnapshot<Section, WeatherLocation>()
@@ -115,6 +117,7 @@ extension MainViewController {
     }
 }
 
+// MARK: - UISearchController searchResultsUpdater
 extension MainViewController: UISearchResultsUpdating {
     var isFilterting: Bool {
         let searchController = self.navigationItem.searchController

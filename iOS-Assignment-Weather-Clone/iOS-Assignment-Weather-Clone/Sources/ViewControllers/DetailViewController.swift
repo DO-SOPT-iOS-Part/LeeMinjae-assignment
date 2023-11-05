@@ -13,7 +13,6 @@ final class DetailViewController: UIViewController {
     
     // MARK: - Properties
     var indexNumber: Int = 0
-    // var timeWeatherData: [TimeWeather] = []
     
     // MARK: - UI Components
     private let detailVerticalScrollView = UIScrollView().then {
@@ -67,6 +66,7 @@ final class DetailViewController: UIViewController {
         $0.backgroundColor = .clear
         $0.showsHorizontalScrollIndicator = false
     }
+    
     private let toolbar = UIView().then {
         $0.backgroundColor = UIColor(cgColor: CGColor(red: 42, green: 48, blue: 64, alpha: 0))
         $0.layer.addBorder([.top], color: .systemGray4, width: 255)
@@ -83,14 +83,14 @@ final class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupUI()
-        setCollectionViewLayout()
-        setCollectionViewConfig()
+        self.setupUI()
+        self.setCollectionViewLayout()
+        self.setCollectionViewConfig()
     }
     
-    // MARK: - @IBAction Properties
+    // MARK: - @Action Functions
     @objc func popToMainVC(_ sender: UIButton) {
-        navigationController?.isNavigationBarHidden = false
+        self.navigationController?.isNavigationBarHidden = false
         self.navigationController?.popViewController(animated: true)
     }
     
@@ -103,12 +103,21 @@ extension DetailViewController {
         self.navigationController?.isNavigationBarHidden = true
         self.detailVerticalScrollView.contentInsetAdjustmentBehavior = .never
         
-        self.view.addSubViews(backgroundImageView, detailVerticalScrollView, toolbar)
-        self.toolbar.addSubViews(mapButton, listButton)
-        self.detailVerticalScrollView.addSubViews(locationLabel, tempLabel, weatherLabel, maxMinTempLabel, timeWeatherView)
-        self.timeWeatherView.addSubViews(weatherSummaryLabel, lineView, detailHorizontalCollectionView)
+        self.view.addSubViews(backgroundImageView,
+                              detailVerticalScrollView,
+                              toolbar)
+        self.toolbar.addSubViews(mapButton,
+                                 listButton)
+        self.detailVerticalScrollView.addSubViews(locationLabel,
+                                                  tempLabel,
+                                                  weatherLabel,
+                                                  maxMinTempLabel,
+                                                  timeWeatherView)
+        self.timeWeatherView.addSubViews(weatherSummaryLabel,
+                                         lineView,
+                                         detailHorizontalCollectionView)
         
-        setupLayout()
+        self.setupLayout()
     }
     
     // 레이아웃 세팅
@@ -200,7 +209,7 @@ extension DetailViewController: UICollectionViewDataSource {
         guard let item = collectionView.dequeueReusableCell(withReuseIdentifier: DetailTimeWeatherCollectionViewCell.identifier,
                                                             for: indexPath) as? DetailTimeWeatherCollectionViewCell else {return UICollectionViewCell()}
         item.bindData(data: dummyLocationData[0].timeWeatherList[indexPath.row])
-
+        
         return item
     }
 }
@@ -210,30 +219,22 @@ extension DetailViewController: UICollectionViewDelegate {
     
 }
 
-// MARK: - CollectionView Delegate Flow Layout
-//extension DetailViewController: UICollectionViewDelegateFlowLayout {
-//    // sizeForItemAt: 각 Cell의 크기를 CGSize 형태로 return
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        return CGSize(width: 46, height: 144)
-//    }
-//    
-//    // minimumInteritemSpacing: Cell 들의 좌,우 간격 지정
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-//        return 22
-//    }
-//    
-//    // minimumLineSpacing: Cell 들의 위, 아래 간격 지정
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-//        return 22
-//    }
-//}
-//
-//    
-
-
-
-//extension DetailViewController: LocationSelectedProtocol {
-//    func dataSend(data: [TimeWeather]) {
-//        timeWeatherData.append(contentsOf: data)
-//    }
-//}
+extension DetailViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 10
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: TenDaysTableViewCell.identifier, for: indexPath) as? TenDaysTableViewCell else {return UITableViewCell()}
+        // self.caculateMinMax(data: tenDaysWeatherDummy)
+        // cell.minMinTemp = minMinTemp
+        // cell.maxMaxTemp = maxMaxTemp
+        // cell.bindData(data: tenDaysWeatherDummy[indexPath.row])
+        cell.selectionStyle = .none
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 55
+    }
+}

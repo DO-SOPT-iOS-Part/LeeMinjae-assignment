@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import SnapKit
+import Then
 
 final class DetailTimeWeatherCollectionViewCell: UICollectionViewCell {
     
@@ -27,7 +29,7 @@ final class DetailTimeWeatherCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        setupUI()
+        self.setupUI()
     }
     
     required init?(coder: NSCoder) {
@@ -39,7 +41,9 @@ final class DetailTimeWeatherCollectionViewCell: UICollectionViewCell {
 extension DetailTimeWeatherCollectionViewCell {
     // UI 세팅
     private func setupUI() {
-        self.contentView.addSubViews(timeViewTimeLabel, timeViewWeatherImage, timeViewTempLabel)
+        self.contentView.addSubViews(timeViewTimeLabel, 
+                                     timeViewWeatherImage,
+                                     timeViewTempLabel)
         self.setupLayout()
     }
     
@@ -62,7 +66,7 @@ extension DetailTimeWeatherCollectionViewCell {
     
     func bindData(data: TimeWeather) {
         self.timeViewTimeLabel.text = data.time
-        setViewState(state: data.weather)
+        self.setViewState(state: data.weather)
         self.timeViewTempLabel.text = String(data.temp) + "˚"
     }
     
