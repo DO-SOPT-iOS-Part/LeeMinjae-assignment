@@ -85,7 +85,7 @@ extension MainViewController {
         textFieldInsideSearchBar?.textColor = .white
     }
     
-    // 테이블뷰 ㅅ[팅
+    // 테이블뷰 세팅
     private func setTableViewConfig() {
         self.mainTableView.register(MainLocationTableViewCell.self,
                                     forCellReuseIdentifier: MainLocationTableViewCell.identifier)

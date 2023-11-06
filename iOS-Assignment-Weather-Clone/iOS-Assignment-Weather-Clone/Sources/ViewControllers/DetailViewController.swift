@@ -66,7 +66,24 @@ final class DetailViewController: UIViewController {
         $0.backgroundColor = .clear
         $0.showsHorizontalScrollIndicator = false
     }
-    
+    private let tenDaysWeatherView = UIView().then {
+        $0.backgroundColor = .white.withAlphaComponent(0.03)
+        $0.layer.borderColor = CGColor(red: 255, green: 255, blue: 255, alpha: 0.25)
+        $0.layer.borderWidth = 1
+        $0.layer.cornerRadius = 10
+    }
+    private let tenDaysWeatherLabel = UILabel().then {
+        $0.text = "10-DAY FORECAST"
+        $0.textColor = .white
+        $0.font = .medium(size: 15)
+    }
+    private let tenDaysWeatherTableView = UITableView(frame: .zero, style: .plain).then {
+        $0.backgroundColor = .clear
+        $0.separatorStyle = .singleLine
+        $0.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        $0.separatorInsetReference = .fromAutomaticInsets
+        $0.separatorColor = .white
+    }
     private let toolbar = UIView().then {
         $0.backgroundColor = UIColor(cgColor: CGColor(red: 42, green: 48, blue: 64, alpha: 0))
         $0.layer.addBorder([.top], color: .systemGray4, width: 255)
@@ -86,6 +103,7 @@ final class DetailViewController: UIViewController {
         self.setupUI()
         self.setCollectionViewLayout()
         self.setCollectionViewConfig()
+        self.setTableViewConfig()
     }
     
     // MARK: - @Action Functions
@@ -112,10 +130,13 @@ extension DetailViewController {
                                                   tempLabel,
                                                   weatherLabel,
                                                   maxMinTempLabel,
-                                                  timeWeatherView)
+                                                  timeWeatherView,
+                                                  tenDaysWeatherView)
         self.timeWeatherView.addSubViews(weatherSummaryLabel,
                                          lineView,
                                          detailHorizontalCollectionView)
+        self.tenDaysWeatherView.addSubViews(tenDaysWeatherLabel,
+                                            tenDaysWeatherTableView)
         
         self.setupLayout()
     }
@@ -180,6 +201,22 @@ extension DetailViewController {
             make.trailing.equalToSuperview()
             make.bottom.equalToSuperview()
         }
+        tenDaysWeatherView.snp.makeConstraints { make in
+            make.top.equalTo(timeWeatherView.snp.bottom).offset(20)
+            make.bottom.equalToSuperview().inset(86)
+            make.leading.trailing.equalToSuperview().inset(20)
+            make.height.equalTo(617)
+
+        }
+        tenDaysWeatherLabel.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview().inset(15)
+            make.top.equalToSuperview().inset(10)
+        }
+        tenDaysWeatherTableView.snp.makeConstraints { make in
+            make.top.equalTo(tenDaysWeatherLabel.snp.bottom).offset(6)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(675)
+        }
     }
     
     private func setCollectionViewLayout() {
@@ -196,6 +233,12 @@ extension DetailViewController {
                                                      forCellWithReuseIdentifier: DetailTimeWeatherCollectionViewCell.identifier)
         self.detailHorizontalCollectionView.delegate = self
         self.detailHorizontalCollectionView.dataSource = self
+    }
+    
+    private func setTableViewConfig() {
+        self.tenDaysWeatherTableView.register(TenDaysTableViewCell.self, forCellReuseIdentifier: TenDaysTableViewCell.identifier)
+        self.tenDaysWeatherTableView.delegate = self
+        self.tenDaysWeatherTableView.dataSource = self
     }
 }
 
@@ -219,22 +262,25 @@ extension DetailViewController: UICollectionViewDelegate {
     
 }
 
+
+// MARK: - TableView Delegate
+extension DetailViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 55
+    }
+}
+
+// MARK: - TableView DataSource
 extension DetailViewController: UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return 11
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: TenDaysTableViewCell.identifier, for: indexPath) as? TenDaysTableViewCell else {return UITableViewCell()}
-        // self.caculateMinMax(data: tenDaysWeatherDummy)
-        // cell.minMinTemp = minMinTemp
-        // cell.maxMaxTemp = maxMaxTemp
-        // cell.bindData(data: tenDaysWeatherDummy[indexPath.row])
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: TenDaysTableViewCell.identifier, for: indexPath) as? TenDaysTableViewCell else { return UITableViewCell() }
+        cell.backgroundColor = .clear
         cell.selectionStyle = .none
         return cell
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 55
     }
 }
