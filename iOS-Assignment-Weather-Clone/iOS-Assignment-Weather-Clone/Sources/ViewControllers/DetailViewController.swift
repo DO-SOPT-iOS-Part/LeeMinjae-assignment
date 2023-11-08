@@ -72,9 +72,13 @@ final class DetailViewController: UIViewController {
         $0.layer.borderWidth = 1
         $0.layer.cornerRadius = 10
     }
+    private let tenDaysImage = UIImageView().then {
+        $0.image = UIImage(systemName: "calendar")
+        $0.tintColor = UIColor(white: 1, alpha: 0.3)
+    }
     private let tenDaysWeatherLabel = UILabel().then {
-        $0.text = "10-DAY FORECAST"
-        $0.textColor = .white
+        $0.text = "10일간의 일기예보"
+        $0.textColor = .white.withAlphaComponent(0.3)
         $0.font = .medium(size: 15)
     }
     private let tenDaysWeatherTableView = UITableView(frame: .zero, style: .plain).then {
@@ -136,7 +140,8 @@ extension DetailViewController {
         self.timeWeatherView.addSubViews(weatherSummaryLabel,
                                          lineView,
                                          detailHorizontalCollectionView)
-        self.tenDaysWeatherView.addSubViews(tenDaysWeatherLabel,
+        self.tenDaysWeatherView.addSubViews(tenDaysImage,
+                                            tenDaysWeatherLabel,
                                             tenDaysWeatherTableView)
         
         self.setupLayout()
@@ -208,8 +213,14 @@ extension DetailViewController {
             make.leading.trailing.equalToSuperview().inset(20)
             make.height.equalTo(675)
         }
+        tenDaysImage.snp.makeConstraints { make in
+            make.leading.equalToSuperview().inset(15)
+            make.top.equalToSuperview().inset(10)
+            make.size.equalTo(18)
+        }
         tenDaysWeatherLabel.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview().inset(15)
+            make.leading.equalTo(tenDaysImage.snp.trailing).offset(5)
+            make.trailing.equalToSuperview().inset(15)
             make.top.equalToSuperview().inset(10)
         }
         tenDaysWeatherTableView.snp.makeConstraints { make in
