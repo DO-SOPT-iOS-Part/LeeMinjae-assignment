@@ -9,10 +9,6 @@ import UIKit
 import SnapKit
 import Then
 
-protocol LocationSelectedProtocol: NSObject {
-    func dataSend(data: [TimeWeather])
-}
-
 enum Section: CaseIterable {
     case main
 }
@@ -20,7 +16,6 @@ enum Section: CaseIterable {
 final class MainViewController: UIViewController {
     
     // MARK: - Properties
-    var delegate: LocationSelectedProtocol?
     var filteredLocationData = [WeatherLocation]()
     var dataSource: UITableViewDiffableDataSource<Section, WeatherLocation>!
     

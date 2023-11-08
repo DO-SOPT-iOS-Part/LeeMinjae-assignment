@@ -16,20 +16,15 @@ final class TenDaysTableViewCell: UITableViewCell {
     
     // MARK: - UI Components
     private let dateLabel = UILabel().then {
-        $0.text = "오늘"
         $0.textColor = .white
         $0.font = .medium(size: 22)
     }
-    private let weatherImage = UIImageView().then {
-        $0.image = UIImage(systemName: "sun.max.fill")
-    }
+    private let weatherImage = UIImageView()
     private let minTempLabel = UILabel().then {
-        $0.text = "25˚"
-        $0.textColor = .systemGray5
+        $0.textColor = .systemGray
         $0.font = .medium(size: 22)
     }
     private let maxTempLabel = UILabel().then {
-        $0.text = "25˚"
         $0.textColor = .white
         $0.font = .medium(size: 22)
     }
@@ -98,4 +93,27 @@ extension TenDaysTableViewCell {
         }
     }
     
+    func bindData(data: TenDaysWeather) {
+        self.dateLabel.text = data.date
+        self.setWeatherImage(state: data.weather)
+        self.minTempLabel.text = String(data.minTemp) + "˚"
+        self.maxTempLabel.text = String(data.maxTemp) + "˚"
+    }
+    
+    func setWeatherImage(state: WeatherState) {
+        switch state {
+        case .sunny:
+            weatherImage.image = UIImage(systemName: "sun.max.fill")?.withRenderingMode(.alwaysOriginal)
+        case .cloud:
+            weatherImage.image = UIImage(systemName: "cloud.moon.fill")?.withRenderingMode(.alwaysOriginal)
+        case .heavyRain:
+            weatherImage.image = UIImage(systemName: "cloud.heavyrain.fill")?.withRenderingMode(.alwaysOriginal)
+        case .lightning:
+            weatherImage.image = UIImage(systemName: "cloud.bolt.fill")?.withRenderingMode(.alwaysOriginal)
+        case .smallRain:
+            weatherImage.image = UIImage(systemName: "cloud.rain.fill")?.withRenderingMode(.alwaysOriginal)
+        case .sunnyRain:
+            weatherImage.image = UIImage(systemName: "cloud.sun.rain.fill")?.withRenderingMode(.alwaysOriginal)
+        }
+    }
 }

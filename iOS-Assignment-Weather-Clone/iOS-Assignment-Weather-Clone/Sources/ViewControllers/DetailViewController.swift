@@ -79,6 +79,7 @@ final class DetailViewController: UIViewController {
     }
     private let tenDaysWeatherTableView = UITableView(frame: .zero, style: .plain).then {
         $0.backgroundColor = .clear
+        $0.isScrollEnabled = false
         $0.separatorStyle = .singleLine
         $0.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         $0.separatorInsetReference = .fromAutomaticInsets
@@ -205,8 +206,7 @@ extension DetailViewController {
             make.top.equalTo(timeWeatherView.snp.bottom).offset(20)
             make.bottom.equalToSuperview().inset(86)
             make.leading.trailing.equalToSuperview().inset(20)
-            make.height.equalTo(617)
-
+            make.height.equalTo(675)
         }
         tenDaysWeatherLabel.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(15)
@@ -215,7 +215,7 @@ extension DetailViewController {
         tenDaysWeatherTableView.snp.makeConstraints { make in
             make.top.equalTo(tenDaysWeatherLabel.snp.bottom).offset(6)
             make.leading.trailing.equalToSuperview()
-            make.height.equalTo(675)
+            make.bottom.equalToSuperview()
         }
     }
     
@@ -258,10 +258,7 @@ extension DetailViewController: UICollectionViewDataSource {
 }
 
 // MARK: - CollectionView Delegate
-extension DetailViewController: UICollectionViewDelegate {
-    
-}
-
+extension DetailViewController: UICollectionViewDelegate {}
 
 // MARK: - TableView Delegate
 extension DetailViewController: UITableViewDelegate {
@@ -279,6 +276,7 @@ extension DetailViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TenDaysTableViewCell.identifier, for: indexPath) as? TenDaysTableViewCell else { return UITableViewCell() }
+        cell.bindData(data: dummyLocationData[0].tenDaysWeatherList[indexPath.row])
         cell.backgroundColor = .clear
         cell.selectionStyle = .none
         return cell
