@@ -30,6 +30,13 @@ final class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // TODO: 서버 연결 확인용 테스트 부분 코드
+        Task {
+            let result = try await GetLocationWeatherService.shared.PostRegisterData(location: "seoul",
+                                                                                   unit: "metric",
+                                                                                   id: "e1ef1ff15bdd3d275708f7d5e3df93ad")
+            print(result)
+        }
         self.setupUI()
         self.setTableViewConfig()
         self.performQuery(with: nil)
