@@ -62,23 +62,33 @@ final class DetailViewController: UIViewController {
     private let lineView = UIView().then {
         $0.backgroundColor = .white.withAlphaComponent(0.25)
     }
-    private let detailHorizontalScrollView = UIScrollView().then {
+    private let detailHorizontalCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout()).then {
+        $0.backgroundColor = .clear
         $0.showsHorizontalScrollIndicator = false
     }
-    private let timeStackView = UIStackView().then {
-        $0.axis = .horizontal
-        $0.spacing = 22
+    private let tenDaysWeatherView = UIView().then {
+        $0.backgroundColor = .white.withAlphaComponent(0.03)
+        $0.layer.borderColor = CGColor(red: 255, green: 255, blue: 255, alpha: 0.25)
+        $0.layer.borderWidth = 1
+        $0.layer.cornerRadius = 10
     }
-    lazy var nowWeatherView = DetailTimeWeatherView(time: "Now", state: .cloud, temp: 20)
-    lazy var firstWeatherView = DetailTimeWeatherView(time: "10시", state: .cloud, temp: 20)
-    lazy var secondWeatherView = DetailTimeWeatherView(time: "11시", state: .cloud, temp: 20)
-    lazy var thirdWeatherView = DetailTimeWeatherView(time: "12시", state: .cloud, temp: 20)
-    lazy var fourthWeatherView = DetailTimeWeatherView(time: "13시", state: .cloud, temp: 20)
-    lazy var fifthWeatherView = DetailTimeWeatherView(time: "14시", state: .cloud, temp: 20)
-    lazy var sixthWeatherView = DetailTimeWeatherView(time: "15시", state: .cloud, temp: 20)
-    lazy var seventhWeatherView = DetailTimeWeatherView(time: "16시", state: .cloud, temp: 20)
-    lazy var eighthWeatherView = DetailTimeWeatherView(time: "17시", state: .cloud, temp: 20)
-    lazy var ninthWeatherView = DetailTimeWeatherView(time: "18시", state: .cloud, temp: 20)
+    private let tenDaysImage = UIImageView().then {
+        $0.image = UIImage(systemName: "calendar")
+        $0.tintColor = UIColor(white: 1, alpha: 0.3)
+    }
+    private let tenDaysWeatherLabel = UILabel().then {
+        $0.text = "10일간의 일기예보"
+        $0.textColor = .white.withAlphaComponent(0.3)
+        $0.font = .medium(size: 15)
+    }
+    private let tenDaysWeatherTableView = UITableView(frame: .zero, style: .plain).then {
+        $0.backgroundColor = .clear
+        $0.isScrollEnabled = false
+        $0.separatorStyle = .singleLine
+        $0.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        $0.separatorInsetReference = .fromAutomaticInsets
+        $0.separatorColor = .white
+    }
     private let toolbar = UIView().then {
         $0.backgroundColor = UIColor(cgColor: CGColor(red: 42, green: 48, blue: 64, alpha: 0))
         $0.layer.addBorder([.top], color: .systemGray4, width: 255)
@@ -95,12 +105,15 @@ final class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupUI()
+        self.setupUI()
+        self.setCollectionViewLayout()
+        self.setCollectionViewConfig()
+        self.setTableViewConfig()
     }
     
-    // MARK: - @IBAction Properties
+    // MARK: - @Action Functions
     @objc func popToMainVC(_ sender: UIButton) {
-        navigationController?.isNavigationBarHidden = false
+        self.navigationController?.isNavigationBarHidden = false
         self.navigationController?.popViewController(animated: true)
     }
     
@@ -111,16 +124,27 @@ extension DetailViewController {
     // UI 세팅
     private func setupUI() {
         self.navigationController?.isNavigationBarHidden = true
-        detailVerticalScrollView.contentInsetAdjustmentBehavior = .never
-
-        self.view.addSubViews(backgroundImageView, detailVerticalScrollView, toolbar)
-        self.toolbar.addSubViews(mapButton, listButton)
-        self.detailVerticalScrollView.addSubViews(locationLabel, tempLabel, weatherLabel, maxMinTempLabel, timeWeatherView)
-        self.timeWeatherView.addSubViews(weatherSummaryLabel, lineView, detailHorizontalScrollView)
-        self.detailHorizontalScrollView.addSubViews(timeStackView)
-        self.timeStackView.addArrangeSubViews(nowWeatherView, firstWeatherView, secondWeatherView, thirdWeatherView, fourthWeatherView, fifthWeatherView, sixthWeatherView, seventhWeatherView, eighthWeatherView, ninthWeatherView)
+        self.detailVerticalScrollView.contentInsetAdjustmentBehavior = .never
         
-        setupLayout()
+        self.view.addSubViews(backgroundImageView,
+                              detailVerticalScrollView,
+                              toolbar)
+        self.toolbar.addSubViews(mapButton,
+                                 listButton)
+        self.detailVerticalScrollView.addSubViews(locationLabel,
+                                                  tempLabel,
+                                                  weatherLabel,
+                                                  maxMinTempLabel,
+                                                  timeWeatherView,
+                                                  tenDaysWeatherView)
+        self.timeWeatherView.addSubViews(weatherSummaryLabel,
+                                         lineView,
+                                         detailHorizontalCollectionView)
+        self.tenDaysWeatherView.addSubViews(tenDaysImage,
+                                            tenDaysWeatherLabel,
+                                            tenDaysWeatherTableView)
+        
+        self.setupLayout()
     }
     
     // 레이아웃 세팅
@@ -177,14 +201,95 @@ extension DetailViewController {
             make.height.equalTo(1)
             make.leading.trailing.equalToSuperview()
         }
-        detailHorizontalScrollView.snp.makeConstraints { make in
+        detailHorizontalCollectionView.snp.makeConstraints { make in
             make.top.equalTo(lineView.snp.bottom).offset(14)
             make.leading.equalToSuperview().inset(15)
             make.trailing.equalToSuperview()
-            make.bottom.equalToSuperview().inset(10)
+            make.bottom.equalToSuperview()
         }
-        timeStackView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+        tenDaysWeatherView.snp.makeConstraints { make in
+            make.top.equalTo(timeWeatherView.snp.bottom).offset(20)
+            make.bottom.equalToSuperview().inset(86)
+            make.leading.trailing.equalToSuperview().inset(20)
+            make.height.equalTo(675)
         }
+        tenDaysImage.snp.makeConstraints { make in
+            make.leading.equalToSuperview().inset(15)
+            make.top.equalToSuperview().inset(10)
+            make.size.equalTo(18)
+        }
+        tenDaysWeatherLabel.snp.makeConstraints { make in
+            make.leading.equalTo(tenDaysImage.snp.trailing).offset(5)
+            make.trailing.equalToSuperview().inset(15)
+            make.top.equalToSuperview().inset(10)
+        }
+        tenDaysWeatherTableView.snp.makeConstraints { make in
+            make.top.equalTo(tenDaysWeatherLabel.snp.bottom).offset(6)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalToSuperview()
+        }
+    }
+    
+    private func setCollectionViewLayout() {
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.itemSize = CGSize(width: 46, height: 140)
+        flowLayout.minimumLineSpacing = 22
+        flowLayout.minimumInteritemSpacing = 22
+        flowLayout.scrollDirection = .horizontal
+        self.detailHorizontalCollectionView.setCollectionViewLayout(flowLayout, animated: false)
+    }
+    
+    private func setCollectionViewConfig() {
+        self.detailHorizontalCollectionView.register(DetailTimeWeatherCollectionViewCell.self,
+                                                     forCellWithReuseIdentifier: DetailTimeWeatherCollectionViewCell.identifier)
+        self.detailHorizontalCollectionView.delegate = self
+        self.detailHorizontalCollectionView.dataSource = self
+    }
+    
+    private func setTableViewConfig() {
+        self.tenDaysWeatherTableView.register(TenDaysTableViewCell.self, forCellReuseIdentifier: TenDaysTableViewCell.identifier)
+        self.tenDaysWeatherTableView.delegate = self
+        self.tenDaysWeatherTableView.dataSource = self
+    }
+}
+
+// MARK: - CollectionView DataSource
+extension DetailViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return dummyLocationData[0].timeWeatherList.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let item = collectionView.dequeueReusableCell(withReuseIdentifier: DetailTimeWeatherCollectionViewCell.identifier,
+                                                            for: indexPath) as? DetailTimeWeatherCollectionViewCell else {return UICollectionViewCell()}
+        item.bindData(data: dummyLocationData[0].timeWeatherList[indexPath.row])
+        
+        return item
+    }
+}
+
+// MARK: - CollectionView Delegate
+extension DetailViewController: UICollectionViewDelegate {}
+
+// MARK: - TableView Delegate
+extension DetailViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 55
+    }
+}
+
+// MARK: - TableView DataSource
+extension DetailViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 11
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: TenDaysTableViewCell.identifier, for: indexPath) as? TenDaysTableViewCell else { return UITableViewCell() }
+        cell.bindData(data: dummyLocationData[0].tenDaysWeatherList[indexPath.row])
+        cell.backgroundColor = .clear
+        cell.selectionStyle = .none
+        return cell
     }
 }

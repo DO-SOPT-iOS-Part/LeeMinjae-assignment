@@ -20,11 +20,9 @@ final class DetailPageViewController: UIViewController {
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        pageVC.dataSource = self
-        pageVC.delegate = self
-        
-        setupUI()
+
+        self.setupUI()
+        self.setPageVCConfig()
     }
     
 }
@@ -38,7 +36,7 @@ extension DetailPageViewController {
         self.view.addSubViews(pageVC.view)
         addChild(pageVC)
         
-        setupLayout()
+        self.setupLayout()
     }
     
     // 레이아웃 세팅
@@ -46,6 +44,12 @@ extension DetailPageViewController {
         pageVC.view.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+    }
+    
+    // 페이지 뷰컨 세팅
+    private func setPageVCConfig() {
+        pageVC.dataSource = self
+        pageVC.delegate = self
     }
 }
 
@@ -68,6 +72,4 @@ extension DetailPageViewController: UIPageViewControllerDataSource {
 }
 
 // MARK: - UIPageViewController Delegate
-extension DetailPageViewController: UIPageViewControllerDelegate {
-    
-}
+extension DetailPageViewController: UIPageViewControllerDelegate {}
