@@ -16,8 +16,9 @@ enum Section: CaseIterable {
 final class MainViewController: UIViewController {
     
     // MARK: - Properties
-    var filteredLocationData = [WeatherLocation]()
-    var dataSource: UITableViewDiffableDataSource<Section, WeatherLocation>!
+    var dataSource: UITableViewDiffableDataSource<Section, LocationWeather>!
+    var serverLocationData = [LocationWeather]()
+    var filteredLocationData = [LocationWeather]()
     
     // MARK: - UI Components
     private let searchController = UISearchController()
@@ -29,17 +30,9 @@ final class MainViewController: UIViewController {
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // TODO: 서버 연결 확인용 테스트 부분 코드
-        Task {
-            let result = try await GetLocationWeatherService.shared.PostRegisterData(location: "seoul",
-                                                                                   unit: "metric",
-                                                                                   id: "e1ef1ff15bdd3d275708f7d5e3df93ad")
-            print(result)
-        }
         self.setupUI()
+        self.fetchData()
         self.setTableViewConfig()
-        self.performQuery(with: nil)
     }
 }
 
@@ -47,7 +40,6 @@ final class MainViewController: UIViewController {
 extension MainViewController {
     // UI 세팅
     private func setupUI() {
-        
         self.setupLayout()
         self.setNavigationBar()
         self.setSearchBar()
@@ -92,30 +84,54 @@ extension MainViewController {
         self.mainTableView.register(MainLocationTableViewCell.self,
                                     forCellReuseIdentifier: MainLocationTableViewCell.identifier)
         self.mainTableView.delegate = self
-        self.dataSource = UITableViewDiffableDataSource<Section, WeatherLocation>(tableView: mainTableView) { (tableView, indexPath, location) -> UITableViewCell? in
+        self.dataSource = UITableViewDiffableDataSource<Section, LocationWeather>(tableView: mainTableView) { (tableView, indexPath, location) -> UITableViewCell? in
             guard let cell = tableView.dequeueReusableCell(withIdentifier: MainLocationTableViewCell.identifier, for: indexPath) as? MainLocationTableViewCell else { return UITableViewCell() }
-            
             cell.bindData(data: location, row: indexPath.row)
             cell.selectionStyle = .none
             
             return cell
         }
-        
         self.mainTableView.dataSource = dataSource
     }
     
     // snapshot & apply 적용 부분
     private func performQuery(with filter: String?) {
-        self.filteredLocationData = dummyLocationData.filter { return $0.location.lowercased().contains(filter ?? "".lowercased()) }
+        self.filteredLocationData = serverLocationData.filter { return $0.name.lowercased().contains(filter ?? "".lowercased()) }
         
-        var snapshot = NSDiffableDataSourceSnapshot<Section, WeatherLocation>()
+        var snapshot = NSDiffableDataSourceSnapshot<Section, LocationWeather>()
         snapshot.appendSections([.main])
         if self.isFilterting {
             snapshot.appendItems(filteredLocationData)
         } else {
-            snapshot.appendItems(dummyLocationData)
+            snapshot.appendItems(serverLocationData)
         }
         self.dataSource.apply(snapshot, animatingDifferences: true)
+    }
+    
+    private func fetchData() {
+        let locations = ["gwangju", "daegu", "daejeon", "busan", "seoul", "jeju", "cheonan"]
+        for location in locations {
+            GetLocationWeatherService.shared.getLocationWeatherInfo(location: location) { (response) in
+                
+                switch(response)
+                {
+                case .success(let weatherData):
+                    if let data = weatherData as? LocationWeather {
+                        self.serverLocationData.append(data)
+                        print(data)
+                    }
+                case .requestErr(let message):
+                    print("REQUEST_ERROR", message)
+                case .pathErr:
+                    print("PATH_ERROR")
+                case .serverErr:
+                    print("SERVER_ERROR")
+                case .networkFail:
+                    print("NETWORK_FAIL")
+                }
+            }
+        }
+        self.mainTableView.reloadData()
     }
 }
 
@@ -145,7 +161,7 @@ extension MainViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let detailPageVC = DetailPageViewController()
         
-        for index in 0 ..< dummyLocationData.count {
+        for index in 0 ..< serverLocationData.count {
             let detailVC = DetailViewController()
             detailVC.indexNumber = index
             detailPageVC.viewControllersArray.append(detailVC)
