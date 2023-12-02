@@ -9,5 +9,7 @@ target 'iOS-Assignment-Weather-Clone' do
   pod 'SwiftLint'  
   pod 'SnapKit'
   pod 'Then'
+  pod 'Alamofire'
+  pod 'Moya'
 
 end

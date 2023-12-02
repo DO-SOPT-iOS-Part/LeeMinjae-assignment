@@ -104,7 +104,6 @@ final class DetailViewController: UIViewController {
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         self.setupUI()
         self.setCollectionViewLayout()
         self.setCollectionViewConfig()
@@ -116,7 +115,6 @@ final class DetailViewController: UIViewController {
         self.navigationController?.isNavigationBarHidden = false
         self.navigationController?.popViewController(animated: true)
     }
-    
 }
 
 // MARK: - Extensions

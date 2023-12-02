@@ -20,7 +20,6 @@ final class MainLocationTableViewCell: UITableViewCell {
         $0.image = #imageLiteral(resourceName: "listCloudImage")
     }
     private let myLocationLabel = UILabel().then {
-        $0.text = "My Location"
         $0.textColor = .white
         $0.font = .bold(size: 25)
     }
@@ -98,11 +97,12 @@ extension MainLocationTableViewCell {
         }
     }
     
-    func bindData(data: WeatherLocation, row: Int) {
-        self.weatherLabel.text = data.weather
-        self.cityLabel.text = data.location
-        self.tempLabel.text = String(data.temp) + "˚"
-        self.maxMinTempLabel.text = "최고:" + String(data.maxTemp) + "˚" + " 최저:" + String(data.minTemp) + "˚"
+    func bindData(data: LocationWeather, row: Int) {
+        self.myLocationLabel.text = data.name
+        self.weatherLabel.text = data.weather[0].main
+        self.cityLabel.text = String(data.timezone)
+        self.tempLabel.text = String(Int(data.main.temp)) + "˚"
+        self.maxMinTempLabel.text = "최고:" + String(Int(data.main.tempMax)) + "˚" + " 최저:" + String(Int(data.main.tempMin)) + "˚"
         self.indexNumber = row
     }
 }
