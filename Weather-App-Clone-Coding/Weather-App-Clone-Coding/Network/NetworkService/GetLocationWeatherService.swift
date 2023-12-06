@@ -12,7 +12,7 @@ struct GetLocationWeatherService {
     static let shared = GetLocationWeatherService()
 
     func getLocationWeatherInfo(location: String, completion: @escaping (NetworkResult<Any>) -> Void) {
-        let url = URL(string: Const.URL.baseURL+"?q=\(location)&units=metric&appid=e1ef1ff15bdd3d275708f7d5e3df93ad")!
+        let url = URL(string: "https://api.openweathermap.org/data/2.5/weather?q=\(location)&units=metric&appid=e1ef1ff15bdd3d275708f7d5e3df93ad")!
         let dataRequest = AF.request(url,
                                      method: .get,
                                      encoding: JSONEncoding.default)
