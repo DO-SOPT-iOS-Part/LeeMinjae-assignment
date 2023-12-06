@@ -7,15 +7,15 @@
 
 ## 🍎 iOS Part Curriculum
   
-| 순번 | 커리큘럼 내용 | 기본 과제 | 심화 과제 | 이론 정리 | 금잔디 코드 리뷰 | 
-| :--: | :--: | :--: | :--: | :--: | :--: | 
-| Week 1 (23.10.07) | 화면 전환 및 데이터 전달, LLDB | ☑️ |  | ☑️ | ☑️ |
-| Week 2 (23.10.14) | CodeBase AutoLayout  | ☑️ | ☑️ | ☑️ | ☑️ |
-| Week 3 (23.10.28) | Protocol, Struct, JSON | ☑️ |  | ☑️ | ☑️ |
-| Week 4 (23.11.11) | 서버 연동, 동시성 프로그래밍 | ☑️ |  | ☑️ | ☑️ |
-| Week 5 (23.11.18) | 합동세미나 (클・디・서)) |
-| Week 6 (23.11.25) |  애니메이션 (CA, UIView, Gesture) |
-| Week 7 (23.12.02) | 아키텍쳐 패턴, DI |
+| 순번 | 커리큘럼 내용 | 클론코딩 과제 | 이론 정리 | 금잔디 코드 리뷰 | 
+| :--: | :--: | :--: | :--: | :--: |
+| Week 1 (23.10.07) | 화면 전환 및 데이터 전달, LLDB | ☑️ | ☑️ | ☑️ |
+| Week 2 (23.10.14) | CodeBase AutoLayout  | ☑️ | ☑️ | ☑️ |
+| Week 3 (23.10.28) | Protocol, Struct, JSON | ☑️ | ☑️ | ☑️ |
+| Week 4 (23.11.11) | 서버 연동, 동시성 프로그래밍 | ☑️ | ☑️ | ☑️ |
+| Week 5 (23.11.18) | 합동세미나 (클・디・서)) | ☑️ | ☑️ | ☑️ |
+| Week 6 (23.11.25) |  애니메이션 (CA, UIView, Gesture) | ☑️ | ☑️ | ☑️ |
+| Week 7 (23.12.02) | 아키텍쳐 패턴, DI | ☑️ | ☑️ | ☑️ |
 | Week 8 (23.12.23) | Package관리 및 앱잼 가이드라인 |
 
 <br>
@@ -28,6 +28,8 @@
 | 2️⃣ | `2주차` | Code Base에서 UI 인스턴스를 직관적으로 만들기 위한 라이브러리, Then | [블로그 링크🔗](https://mini-min-dev.tistory.com/218) |
 | 3️⃣ | `3주차` | UISearchController를 이용해서 TableView의 특정 Cell을 표출하는 SearchBar | [블로그 링크🔗](https://mini-min-dev.tistory.com/220) |
 | 4️⃣ | `4주차` | 내가 서버 통신(Networking) 진짜 알기 쉽게 정리해서 올려줄게 (HTTP, JSON, REST API) | [블로그 링크🔗](https://mini-min-dev.tistory.com/225) |
+| 5️⃣ | `5, 6주차` | 상단 커스텀 탭바를 만들어봅시다! (UISegmentedControl 활용) | [블로그 링크🔗](https://mini-min-dev.tistory.com/226) |
+| 6️⃣ | `5, 6주차` | CALayer에 추가해준 속성이 적용되지 않았던 이유 (bounds, frame, viewDidLayoutSubviews, layoutSubViews) | [블로그 링크🔗](https://mini-min-dev.tistory.com/227) |
 
 <br>
 
