@@ -31,8 +31,9 @@ final class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupUI()
-        self.fetchData()
         self.setTableViewConfig()
+        self.mainTableView.reloadData()
+        getLocationWeatherWithAPI(location: "seoul")
     }
 }
 
@@ -40,9 +41,9 @@ final class MainViewController: UIViewController {
 extension MainViewController {
     // UI 세팅
     private func setupUI() {
-        self.setupLayout()
-        self.setNavigationBar()
-        self.setSearchBar()
+        setupLayout()
+        setNavigationBar()
+        setSearchBar()
     }
     
     // 레이아웃 세팅
@@ -107,32 +108,6 @@ extension MainViewController {
         }
         self.dataSource.apply(snapshot, animatingDifferences: true)
     }
-    
-    private func fetchData() {
-        let locations = ["gwangju", "daegu", "daejeon", "busan", "seoul", "jeju", "cheonan"]
-        for location in locations {
-            GetLocationWeatherService.shared.getLocationWeatherInfo(location: location) { (response) in
-                
-                switch(response)
-                {
-                case .success(let weatherData):
-                    if let data = weatherData as? LocationWeather {
-                        self.serverLocationData.append(data)
-                        print(data)
-                    }
-                case .requestErr(let message):
-                    print("REQUEST_ERROR", message)
-                case .pathErr:
-                    print("PATH_ERROR")
-                case .serverErr:
-                    print("SERVER_ERROR")
-                case .networkFail:
-                    print("NETWORK_FAIL")
-                }
-            }
-        }
-        self.mainTableView.reloadData()
-    }
 }
 
 // MARK: - UISearchController searchResultsUpdater
@@ -171,5 +146,24 @@ extension MainViewController: UITableViewDelegate {
         detailPageVC.pageVC.setViewControllers([firstVC], direction: .forward, animated: true)
         
         self.navigationController?.pushViewController(detailPageVC, animated: true)
+    }
+}
+
+extension MainViewController {
+    func getLocationWeatherWithAPI(location: String) {
+//        MainAPI.shared.getLocationWeather(location: location, completion: { response in
+//            switch response {
+//            case .success(let data):
+//                print("⭐️ success", data)
+//            case .requestErr(let statusCode):
+//                print("requestErr", statusCode)
+//            case .pathErr:
+//                print(".pathErr")
+//            case .serverErr:
+//                print("serverErr")
+//            case .networkFail:
+//                print("networkFail")
+//            }
+//        })
     }
 }

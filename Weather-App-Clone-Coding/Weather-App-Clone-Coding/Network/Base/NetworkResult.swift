@@ -1,8 +1,8 @@
 //
 //  NetworkResult.swift
-//  iOS-Assignment-Weather-Clone
+//  Weather-App-Clone-Coding
 //
-//  Created by 민 on 11/13/23.
+//  Created by 민 on 12/6/23.
 //
 
 import Foundation

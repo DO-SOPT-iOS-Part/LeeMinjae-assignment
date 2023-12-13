@@ -10,7 +10,5 @@ import Foundation
 enum URLConstant {
     
     // MARK: - Base URL
-    
     static let baseURL = "https://api.openweathermap.org/data/2.5/weather"
-    
 }

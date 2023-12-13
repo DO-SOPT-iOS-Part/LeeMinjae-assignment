@@ -22,8 +22,7 @@ final class DetailPageViewController: UIViewController {
         super.viewDidLoad()
         self.setupUI()
         self.setPageVCConfig()
-    }
-    
+    }    
 }
 
 // MARK: - Extensions
@@ -47,28 +46,28 @@ extension DetailPageViewController {
     
     // 페이지 뷰컨 세팅
     private func setPageVCConfig() {
-        pageVC.dataSource = self
+        // pageVC.dataSource = self
         pageVC.delegate = self
     }
 }
 
 // MARK: - UIPageViewController DataSource
-extension DetailPageViewController: UIPageViewControllerDataSource {
-    func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        guard let index = viewControllersArray.firstIndex(of: viewController as! DetailViewController) else { return nil }
-        let previousIndex = index - 1
-        if previousIndex < 0 { return nil }
-        return viewControllersArray[previousIndex]
-    }
-    
-    func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        guard let index = viewControllersArray.firstIndex(of: viewController as! DetailViewController) else { return nil }
-        let nextIndex = index + 1
-        if nextIndex < 0 { return nil }
-        return viewControllersArray[nextIndex]
-    }
-    
-}
+//extension DetailPageViewController: UIPageViewControllerDataSource {
+//    func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
+//        guard let index = viewControllersArray.firstIndex(of: viewController as? DetailViewController ?? uiviewcon) else { return nil }
+//        let previousIndex = index - 1
+//        if previousIndex < 0 { return nil }
+//        return viewControllersArray[previousIndex]
+//    }
+//    
+//    func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
+//        guard let index = viewControllersArray.firstIndex(of: viewController as! DetailViewController) else { return nil }
+//        let nextIndex = index + 1
+//        if nextIndex < 0 { return nil }
+//        return viewControllersArray[nextIndex]
+//    }
+//    
+//}
 
 // MARK: - UIPageViewController Delegate
 extension DetailPageViewController: UIPageViewControllerDelegate {}
