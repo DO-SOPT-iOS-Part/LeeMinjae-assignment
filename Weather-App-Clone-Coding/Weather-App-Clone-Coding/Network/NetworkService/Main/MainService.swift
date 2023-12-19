@@ -50,10 +50,10 @@ extension MainService: TargetType {
     }
     
     /// HTTP headers
-    var headers: [String : String]? {
+    var headers: [String: String]? {
         switch self {
         case .getLocationWeather:
-            return nil
+            return ["Content-type": "application/json"]
         }
     }
 }

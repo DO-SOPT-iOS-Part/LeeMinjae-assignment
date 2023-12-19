@@ -151,19 +151,19 @@ extension MainViewController: UITableViewDelegate {
 
 extension MainViewController {
     func getLocationWeatherWithAPI(location: String) {
-//        MainAPI.shared.getLocationWeather(location: location, completion: { response in
-//            switch response {
-//            case .success(let data):
-//                print("⭐️ success", data)
-//            case .requestErr(let statusCode):
-//                print("requestErr", statusCode)
-//            case .pathErr:
-//                print(".pathErr")
-//            case .serverErr:
-//                print("serverErr")
-//            case .networkFail:
-//                print("networkFail")
-//            }
-//        })
+        MainAPI.shared.getLocationWeather(location: location, completion: { response in
+            switch response {
+            case .success(let data):
+                print("success", data)
+            case .requestErr(let statusCode):
+                print("requestErr", statusCode)
+            case .pathErr:
+                print(".pathErr")
+            case .serverErr:
+                print("serverErr")
+            case .networkFail:
+                print("networkFail")
+            }
+        })
     }
 }

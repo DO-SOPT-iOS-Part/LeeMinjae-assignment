@@ -9,6 +9,8 @@ import Foundation
 import Moya
 import UIKit
 
+// MoyaLoggerPlugin : 발생하는 모든 네트워크 작업을 콘솔에 기록해주기 위함
+
 final class MoyaLoggerPlugin: PluginType {
     // Request를 보낼 때 호출
     func willSend(_ request: RequestType, target: TargetType) {
@@ -30,7 +32,7 @@ final class MoyaLoggerPlugin: PluginType {
         print(log)
     }
     
-    // Response가 왔을 때
+    // Response가 왔을 때 호출
     func didReceive(_ result: Result<Response, MoyaError>, target: TargetType) {
         switch result {
         case let .success(response):
@@ -40,6 +42,7 @@ final class MoyaLoggerPlugin: PluginType {
         }
     }
     
+    // Network 통신이 성공했을 때 호출
     func onSuceed(_ response: Response, target: TargetType, isFromError: Bool) {
         let request = response.request
         let url = request?.url?.absoluteString ?? "nil"
@@ -58,6 +61,7 @@ final class MoyaLoggerPlugin: PluginType {
         print(log)
     }
     
+    // Network 통신이 실패했을 때 호출
     func onFail(_ error: MoyaError, target: TargetType) {
         if let response = error.response {
             onSuceed(response, target: target, isFromError: true)

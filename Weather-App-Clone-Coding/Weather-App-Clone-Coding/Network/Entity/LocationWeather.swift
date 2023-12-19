@@ -15,6 +15,7 @@ struct LocationWeather: Codable, Hashable {
     let main: Main
     let visibility: Int
     let wind: Wind
+    let snow: Snow
     let clouds: Clouds
     let dt: Int
     let sys: Sys
@@ -44,6 +45,15 @@ struct Main: Codable, Hashable {
         case tempMin = "temp_min"
         case tempMax = "temp_max"
         case pressure, humidity
+    }
+}
+
+// MARK: - Snow
+struct Snow: Codable, Hashable {
+    let the1H: Double
+
+    enum CodingKeys: String, CodingKey {
+        case the1H = "1h"
     }
 }
 
