@@ -106,4 +106,3 @@ extension MainLocationTableViewCell {
         self.indexNumber = row
     }
 }
-

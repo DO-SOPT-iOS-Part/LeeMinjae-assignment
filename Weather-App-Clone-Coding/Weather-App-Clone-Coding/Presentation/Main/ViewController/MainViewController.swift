@@ -16,7 +16,6 @@ enum Section: CaseIterable {
 final class MainViewController: UIViewController {
     
     // MARK: - Properties
-    var dataSource: UITableViewDiffableDataSource<Section, LocationWeather>!
     var serverLocationData = [LocationWeather]()
     var filteredLocationData = [LocationWeather]()
     
@@ -32,7 +31,6 @@ final class MainViewController: UIViewController {
         super.viewDidLoad()
         self.setupUI()
         self.setTableViewConfig()
-        self.mainTableView.reloadData()
         getLocationWeatherWithAPI(location: "seoul")
     }
 }
@@ -85,14 +83,7 @@ extension MainViewController {
         self.mainTableView.register(MainLocationTableViewCell.self,
                                     forCellReuseIdentifier: MainLocationTableViewCell.identifier)
         self.mainTableView.delegate = self
-        self.dataSource = UITableViewDiffableDataSource<Section, LocationWeather>(tableView: mainTableView) { (tableView, indexPath, location) -> UITableViewCell? in
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: MainLocationTableViewCell.identifier, for: indexPath) as? MainLocationTableViewCell else { return UITableViewCell() }
-            cell.bindData(data: location, row: indexPath.row)
-            cell.selectionStyle = .none
-            
-            return cell
-        }
-        self.mainTableView.dataSource = dataSource
+        self.mainTableView.dataSource = self
     }
     
     // snapshot & apply 적용 부분
@@ -106,7 +97,7 @@ extension MainViewController {
         } else {
             snapshot.appendItems(serverLocationData)
         }
-        self.dataSource.apply(snapshot, animatingDifferences: true)
+        // self.dataSource.apply(snapshot, animatingDifferences: true)
     }
 }
 
@@ -149,20 +140,40 @@ extension MainViewController: UITableViewDelegate {
     }
 }
 
+// MARK: - TableView DataSource
+extension MainViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return serverLocationData.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: MainLocationTableViewCell.identifier, for: indexPath) as? MainLocationTableViewCell else { return UITableViewCell() }
+        cell.bindData(data: serverLocationData[indexPath.row], row: indexPath.row)
+        return cell
+    }
+    
+}
+
+// MARK: - Network
 extension MainViewController {
     func getLocationWeatherWithAPI(location: String) {
         MainAPI.shared.getLocationWeather(location: location, completion: { response in
-            switch response {
-            case .success(let data):
-                print("success", data)
-            case .requestErr(let statusCode):
-                print("requestErr", statusCode)
-            case .pathErr:
-                print(".pathErr")
-            case .serverErr:
-                print("serverErr")
-            case .networkFail:
-                print("networkFail")
+            DispatchQueue.main.async {
+                switch response {
+                case .success(let data):
+                    if let data = data as? LocationWeather {
+                        self.serverLocationData.append(data)
+                        self.mainTableView.reloadData()
+                    }
+                case .requestErr(let statusCode):
+                    print("requestErr", statusCode)
+                case .pathErr:
+                    print(".pathErr")
+                case .serverErr:
+                    print("serverErr")
+                case .networkFail:
+                    print("networkFail")
+                }
             }
         })
     }

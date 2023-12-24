@@ -12,9 +12,7 @@ final class MainAPI {
     
     static let shared = MainAPI()
     var mainProvider = MoyaProvider<MainService>(plugins: [MoyaLoggerPlugin()])
-    
-    public init() { }
-    
+        
     func getLocationWeather(location: String, 
                             completion: @escaping (NetworkResult<Any>) -> Void) {
         mainProvider.request(.getLocationWeather(location: location)) { result in
