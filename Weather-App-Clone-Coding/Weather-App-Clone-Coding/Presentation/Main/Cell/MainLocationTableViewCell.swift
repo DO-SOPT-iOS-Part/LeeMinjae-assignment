@@ -52,7 +52,7 @@ final class MainLocationTableViewCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-
+        
         contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 0, left: 0, bottom: 16, right: 0))
     }
     
@@ -100,9 +100,16 @@ extension MainLocationTableViewCell {
     func bindData(data: LocationWeather, row: Int) {
         self.myLocationLabel.text = data.name
         self.weatherLabel.text = data.weather[0].main
-        self.cityLabel.text = String(data.timezone)
+        self.cityLabel.text = makeTimeZoneToTime(timeZone: Int(data.timezone))
         self.tempLabel.text = String(Int(data.main.temp)) + "˚"
-        self.maxMinTempLabel.text = "최고:" + String(Int(data.main.tempMax)) + "˚" + " 최저:" + String(Int(data.main.tempMin)) + "˚"
-        self.indexNumber = row
+        self.maxMinTempLabel.text = "H:" + String(Int(data.main.tempMax)) + "˚" + " L:" + String(Int(data.main.tempMin)) + "˚"
+    }
+    
+    func makeTimeZoneToTime(timeZone: Int) -> String {
+        let today = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: timeZone)
+        dateFormatter.dateFormat = "HH:mm"
+        return dateFormatter.string(from: today)
     }
 }

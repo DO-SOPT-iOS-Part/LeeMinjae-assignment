@@ -16,6 +16,7 @@ enum Section: CaseIterable {
 final class MainViewController: UIViewController {
     
     // MARK: - Properties
+    let cityList = ["seoul", "cheonan", "busan", "daegu", "jeju"]
     var serverLocationData = [LocationWeather]()
     var filteredLocationData = [LocationWeather]()
     
@@ -31,7 +32,9 @@ final class MainViewController: UIViewController {
         super.viewDidLoad()
         self.setupUI()
         self.setTableViewConfig()
-        getLocationWeatherWithAPI(location: "seoul")
+        for city in cityList {
+            getLocationWeatherWithAPI(location: city)
+        }
     }
 }
 
@@ -148,6 +151,7 @@ extension MainViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MainLocationTableViewCell.identifier, for: indexPath) as? MainLocationTableViewCell else { return UITableViewCell() }
+        cell.selectionStyle = .none
         cell.bindData(data: serverLocationData[indexPath.row], row: indexPath.row)
         return cell
     }
