@@ -22,7 +22,6 @@ final class MainViewController: UIViewController {
     
     // MARK: - UI Components
     private let searchController = UISearchController()
-    
     private let mainTableView = MainTableView()
     private lazy var tableView = mainTableView.tableView
     
@@ -37,22 +36,18 @@ final class MainViewController: UIViewController {
         setDelegate()
         setNavigationBar()
         setSearchBar()
-        for city in cityList {
-            getLocationWeatherWithAPI(location: city)
-        }
+        setLocationWeatherWithAPI()
     }
 }
 
 // MARK: - Extensions
 extension MainViewController {
-
-    /// 델리게이트 세팅
     private func setDelegate() {
         tableView.delegate = self
         tableView.dataSource = self
+        navigationItem.searchController?.searchResultsUpdater = self
     }
     
-    /// 네비게이션바 세팅
     private func setNavigationBar() {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.barTintColor = .black
@@ -67,28 +62,12 @@ extension MainViewController {
         navigationItem.hidesSearchBarWhenScrolling = false
     }
     
-    /// 서치바 세팅
     private func setSearchBar() {
         navigationItem.searchController = searchController
         navigationItem.searchController?.searchBar.placeholder = "Search for a city or airport"
         navigationItem.searchController?.searchResultsUpdater = self
-        
         let textFieldInsideSearchBar = navigationItem.searchController?.searchBar.value(forKey: "searchField") as? UITextField
         textFieldInsideSearchBar?.textColor = .white
-    }
-    
-    /// snapshot & apply 적용 부분
-    private func performQuery(with filter: String?) {
-        self.filteredLocationData = serverLocationData.filter { return $0.name.lowercased().contains(filter ?? "".lowercased()) }
-        
-        var snapshot = NSDiffableDataSourceSnapshot<Section, LocationWeather>()
-        snapshot.appendSections([.main])
-        if self.isFilterting {
-            snapshot.appendItems(filteredLocationData)
-        } else {
-            snapshot.appendItems(serverLocationData)
-        }
-        // self.dataSource.apply(snapshot, animatingDifferences: true)
     }
 }
 
@@ -98,13 +77,13 @@ extension MainViewController: UISearchResultsUpdating {
         let searchController = self.navigationItem.searchController
         let isActive = searchController?.isActive ?? false
         let isSearchBarHasText = searchController?.searchBar.text?.isEmpty == false
-        
         return isActive && isSearchBarHasText
     }
     
     func updateSearchResults(for searchController: UISearchController) {
         guard let text = searchController.searchBar.text else { return }
-        performQuery(with: text)
+        filteredLocationData = serverLocationData.filter { return $0.name.lowercased().contains(text.lowercased()) }
+        tableView.reloadData()
     }
 }
 
@@ -134,13 +113,17 @@ extension MainViewController: UITableViewDelegate {
 // MARK: - TableView DataSource
 extension MainViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return serverLocationData.count
+        return isFilterting ? filteredLocationData.count : serverLocationData.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MainLocationTableViewCell.identifier, for: indexPath) as? MainLocationTableViewCell else { return UITableViewCell() }
+        if isFilterting {
+            cell.bindData(data: filteredLocationData[indexPath.row], row: indexPath.row)
+        } else {
+            cell.bindData(data: serverLocationData[indexPath.row], row: indexPath.row)
+        }
         cell.selectionStyle = .none
-        cell.bindData(data: serverLocationData[indexPath.row], row: indexPath.row)
         return cell
     }
     
@@ -148,14 +131,15 @@ extension MainViewController: UITableViewDataSource {
 
 // MARK: - Network
 extension MainViewController {
-    func getLocationWeatherWithAPI(location: String) {
-        MainAPI.shared.getLocationWeather(location: location, completion: { response in
-            DispatchQueue.main.async {
+    func getLocationWeatherWithAPI(location: String, completion: @escaping () -> Void) {
+        MainAPI.shared.getLocationWeather(location: location) { response in
+            DispatchQueue.global().async {
                 switch response {
                 case .success(let data):
                     if let data = data as? LocationWeather {
-                        self.serverLocationData.append(data)
-                        self.tableView.reloadData()
+                        DispatchQueue.main.async {
+                            self.serverLocationData.append(data)
+                        }
                     }
                 case .requestErr(let statusCode):
                     print("requestErr", statusCode)
@@ -166,7 +150,25 @@ extension MainViewController {
                 case .networkFail:
                     print("networkFail")
                 }
+                
+                DispatchQueue.main.async {
+                    completion() // API 요청 완료 후 호출
+                }
             }
-        })
+        }
+    }
+    
+    func setLocationWeatherWithAPI() {
+        let group = DispatchGroup()
+        for city in cityList {
+            group.enter()
+            getLocationWeatherWithAPI(location: city) {
+                group.leave()
+            }
+        }
+        
+        group.notify(queue: .main) {
+            self.tableView.reloadData()
+        }
     }
 }
