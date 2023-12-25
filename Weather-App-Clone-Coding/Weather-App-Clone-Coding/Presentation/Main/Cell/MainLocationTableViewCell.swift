@@ -43,7 +43,9 @@ final class MainLocationTableViewCell: UITableViewCell {
     // MARK: - View Life Cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.setupUI()
+        setUI()
+        setHierarchy()
+        setLayout()
     }
     
     required init?(coder: NSCoder) {
@@ -52,26 +54,22 @@ final class MainLocationTableViewCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        
         contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 0, left: 0, bottom: 16, right: 0))
     }
-    
 }
 
 // MARK: - Extensions
 extension MainLocationTableViewCell {
-    // UI 세팅
-    private func setupUI() {
-        self.contentView.addSubViews(weatherImageView)
-        weatherImageView.addSubViews(myLocationLabel, cityLabel, weatherLabel, tempLabel, maxMinTempLabel)
-        
-        self.setupLayout()
+    private func setUI() {
+        self.backgroundColor = .black
     }
     
-    // 레이아웃 세팅
-    private func setupLayout() {
-        self.backgroundColor = .black
-        
+    private func setHierarchy() {
+        contentView.addSubViews(weatherImageView)
+        weatherImageView.addSubViews(myLocationLabel, cityLabel, weatherLabel, tempLabel, maxMinTempLabel)
+    }
+    
+    private func setLayout() {
         weatherImageView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }

@@ -22,16 +22,21 @@ final class MainViewController: UIViewController {
     
     // MARK: - UI Components
     private let searchController = UISearchController()
-    private let mainContentView = UIView()
-    private let mainTableView = UITableView(frame: .zero, style: .insetGrouped).then {
-        $0.backgroundColor = .black
-    }
+    
+    private let mainTableView = MainTableView()
+    private lazy var tableView = mainTableView.tableView
     
     // MARK: - View Life Cycle
+    override func loadView() {
+        super.loadView()
+        view = mainTableView
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.setupUI()
-        self.setTableViewConfig()
+        setDelegate()
+        setNavigationBar()
+        setSearchBar()
         for city in cityList {
             getLocationWeatherWithAPI(location: city)
         }
@@ -40,23 +45,14 @@ final class MainViewController: UIViewController {
 
 // MARK: - Extensions
 extension MainViewController {
-    // UI 세팅
-    private func setupUI() {
-        setupLayout()
-        setNavigationBar()
-        setSearchBar()
+
+    /// 델리게이트 세팅
+    private func setDelegate() {
+        tableView.delegate = self
+        tableView.dataSource = self
     }
     
-    // 레이아웃 세팅
-    private func setupLayout() {
-        self.view.addSubViews(mainTableView)
-        
-        mainTableView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-    }
-    
-    // 네비게이션바 세팅
+    /// 네비게이션바 세팅
     private func setNavigationBar() {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.barTintColor = .black
@@ -71,7 +67,7 @@ extension MainViewController {
         navigationItem.hidesSearchBarWhenScrolling = false
     }
     
-    // 서치바 세팅
+    /// 서치바 세팅
     private func setSearchBar() {
         navigationItem.searchController = searchController
         navigationItem.searchController?.searchBar.placeholder = "Search for a city or airport"
@@ -81,15 +77,7 @@ extension MainViewController {
         textFieldInsideSearchBar?.textColor = .white
     }
     
-    // 테이블뷰 세팅
-    private func setTableViewConfig() {
-        self.mainTableView.register(MainLocationTableViewCell.self,
-                                    forCellReuseIdentifier: MainLocationTableViewCell.identifier)
-        self.mainTableView.delegate = self
-        self.mainTableView.dataSource = self
-    }
-    
-    // snapshot & apply 적용 부분
+    /// snapshot & apply 적용 부분
     private func performQuery(with filter: String?) {
         self.filteredLocationData = serverLocationData.filter { return $0.name.lowercased().contains(filter ?? "".lowercased()) }
         
@@ -167,7 +155,7 @@ extension MainViewController {
                 case .success(let data):
                     if let data = data as? LocationWeather {
                         self.serverLocationData.append(data)
-                        self.mainTableView.reloadData()
+                        self.tableView.reloadData()
                     }
                 case .requestErr(let statusCode):
                     print("requestErr", statusCode)

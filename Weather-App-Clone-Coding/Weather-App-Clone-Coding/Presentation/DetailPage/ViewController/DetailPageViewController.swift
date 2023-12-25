@@ -52,7 +52,7 @@ extension DetailPageViewController {
 }
 
 // MARK: - UIPageViewController DataSource
-//extension DetailPageViewController: UIPageViewControllerDataSource {
+// extension DetailPageViewController: UIPageViewControllerDataSource {
 //    func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
 //        guard let index = viewControllersArray.firstIndex(of: viewController as? DetailViewController ?? uiviewcon) else { return nil }
 //        let previousIndex = index - 1
@@ -67,7 +67,7 @@ extension DetailPageViewController {
 //        return viewControllersArray[nextIndex]
 //    }
 //    
-//}
+// }
 
 // MARK: - UIPageViewController Delegate
 extension DetailPageViewController: UIPageViewControllerDelegate {}
